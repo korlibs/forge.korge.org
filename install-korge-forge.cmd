@@ -24,7 +24,9 @@ SET DOWNLOAD_SHA1=%INSTALLER_SHA1%
 CALL :DOWNLOAD_FILE
 
 if not exist "%JRE_JAVA_BIN%" (
+    echo Unzipping %JRE_ZIP%...
     tar -xf "%JRE_ZIP%" -C "%JRE_LOCAL%" 2> NUL > NUL
+    echo Ok
 )
 
 "%JRE_JAVA_BIN%\java" -jar %INSTALLER_LOCAL%
@@ -40,13 +42,14 @@ EXIT /B
     SET DOWNLOAD_LOCAL_SHA1=%DOWNLOAD_LOCAL%.sha1
 
     if not exist "%DOWNLOAD_LOCAL%" (
+        echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
         powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
 
         CertUtil -hashfile "%DOWNLOAD_LOCAL_TMP%" SHA1 | find /i /v "sha1" | find /i /v "certutil" > "%DOWNLOAD_LOCAL_SHA1%"
         FOR /F "tokens=*" %%g IN ('type %DOWNLOAD_LOCAL_SHA1%') do (SET SHA1=%%g)
         if "%SHA1%"=="%DOWNLOAD_SHA1%" (
             MOVE "%DOWNLOAD_LOCAL_TMP%" "%DOWNLOAD_LOCAL%" 2> NUL > NUL
-            echo DONE
+            echo Ok
         ) else (
             echo "Error downloading file expected '%DOWNLOAD_SHA1%' but found '%SHA1%' from url %DOWNLOAD_URL%"
             exit /b
