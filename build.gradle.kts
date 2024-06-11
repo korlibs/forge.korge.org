@@ -93,4 +93,11 @@ tasks {
             })
         }
     }
+
+    val createExe by creating(Copy::class) {
+        dependsOn(proguard)
+        from("$buildDir/libs/korge-forge-installer-1.0.0-all.min.jar")
+        into("$buildDir")
+        rename { "korge-forge-installer.jar" }
+    }
 }
