@@ -66,7 +66,7 @@ class NodeApplier(val container: Container) : AbstractApplier<Component>(contain
 
 var reasonToAllowFrameClosing: String? = null
 
-fun ComposeJFrame(title: String, size: Dimension = Dimension(640, 400), content: @Composable () -> Unit) {
+fun ComposeJFrame(title: String, size: Dimension = Dimension(640, 400), configureFrame: (JFrame) -> Unit = {}, content: @Composable () -> Unit) {
     try {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: Throwable) {
@@ -92,6 +92,8 @@ fun ComposeJFrame(title: String, size: Dimension = Dimension(640, 400), content:
 
     //frame.layout = FlowLayout(FlowLayout.LEFT)
     //frame.contentPane.add(JLabel(ImageIcon(image)))
+
+    configureFrame(frame)
 
     frame.pack()
     frame.setLocationRelativeTo(null)
