@@ -43,13 +43,13 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val mainClassName = "korge.MainKt"
+val appMainClassName = "korge.MainKt"
 
 tasks {
     jar {
         // Specify the main class for the manifest
         manifest {
-            attributes["Main-Class"] = mainClassName
+            attributes["Main-Class"] = appMainClassName
         }
 
         // Optionally, include additional resources or files
@@ -68,7 +68,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 application {
     // Define the main class for the application
-    mainClass.set(mainClassName)
+    mainClass.set(appMainClassName)
 }
 
 tasks {
@@ -80,7 +80,9 @@ tasks {
         dontwarn()
         ignorewarnings()
         dontobfuscate()
-        keep("class $mainClassName { *; }")
+        keep("class $appMainClassName { *; }")
+        keep("class kotlinx.coroutines.swing.** { *; }")
+
         //keepnames("class com.sun.jna.** { *; }")
         //println(configurations.getByName("runtimeClasspath").files.toList())
         //libraryjars(configurations.getByName("runtimeClasspath"))
