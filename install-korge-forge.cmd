@@ -43,9 +43,10 @@ EXIT /B
 
     if not exist "%DOWNLOAD_LOCAL%" (
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
-        curl -s "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%"
-        REM powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
-        REM timeout /T 2 /NOBREAK > NUL
+        REM curl -s "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%"
+        REM powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')" && timeout /T 10 /NOBREAK > NUL
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-BitsTransfer -Source '%DOWNLOAD_URL%' -Destination '%DOWNLOAD_LOCAL_TMP:\=\\%'" && timeout /T 1 /NOBREAK > NUL
+
         FOR /f %%i IN (
             'powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Filehash -Path '%DOWNLOAD_LOCAL_TMP:\=\\%' -Algorithm SHA1).Hash"'
         ) DO SET SHA1=%%i
@@ -55,10 +56,7 @@ EXIT /B
             echo Ok
         ) else (
             echo "Error downloading file expected '%DOWNLOAD_SHA1%' but found '%SHA1%' from url %DOWNLOAD_URL%"
-            GOTO :END
+            EXIT /B 1
         )
     )
 EXIT /B
-
-:END
-EXIT -1
