@@ -1,4 +1,5 @@
 @echo off
+
 set JRE_URL=https://github.com/korlibs/universal-jre/releases/download/0.0.1/OpenJDK21U-jre_x64_windows_hotspot_21.0.3_9.zip
 set JRE_SHA1=ac94fdd901665b62e643dd70c848fe8dcc606651
 set JRE_LOCAL=%LOCALAPPDATA%\KorgeForgeInstaller
@@ -44,9 +45,10 @@ EXIT /B
     if not exist "%DOWNLOAD_LOCAL%" (
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
         powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
+        TIMEOUT /T 1 /NOBREAK > NUL
 
-        CertUtil -hashfile "%DOWNLOAD_LOCAL_TMP%" SHA1 | find /i /v "sha1" | find /i /v "certutil" > "%DOWNLOAD_LOCAL_SHA1%"
-        FOR /F "tokens=*" %%g IN ('type %DOWNLOAD_LOCAL_SHA1%') do (SET SHA1=%%g)
+        CertUtil -hashfile "%DOWNLOAD_LOCAL_TMP%" SHA1 | find /i /v "sha1" | find /i /v "certutil" > %DOWNLOAD_LOCAL_SHA1%
+        set /P SHA1=<%DOWNLOAD_LOCAL_SHA1%
         if "%SHA1%"=="%DOWNLOAD_SHA1%" (
             MOVE "%DOWNLOAD_LOCAL_TMP%" "%DOWNLOAD_LOCAL%" 2> NUL > NUL
             echo Ok
