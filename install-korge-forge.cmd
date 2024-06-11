@@ -40,25 +40,19 @@ EXIT /B
     REM DOWNLOAD_SHA1
 
     SET DOWNLOAD_LOCAL_TMP=%DOWNLOAD_LOCAL%.tmp
-    SET DOWNLOAD_LOCAL_SHA1=%DOWNLOAD_LOCAL%.sha1
 
     if not exist "%DOWNLOAD_LOCAL%" (
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
         powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
-        TIMEOUT /T 1 /NOBREAK > NUL
+        for /f %%i in (
+            'powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Filehash -Path '%DOWNLOAD_LOCAL_TMP:\=\\%' -Algorithm SHA1).Hash"'
+        ) do set SHA1=%%i
 
-        CertUtil -hashfile "%DOWNLOAD_LOCAL_TMP%" SHA1 | find /i /v "sha1" | find /i /v "certutil" > %DOWNLOAD_LOCAL_SHA1%
-        TIMEOUT /T 1 /NOBREAK > NUL
-
-        set /P SHA1=<%DOWNLOAD_LOCAL_SHA1%
-
-        if "%SHA1%"=="%DOWNLOAD_SHA1%" (
+        if /i "%SHA1%"=="%DOWNLOAD_SHA1%" (
             MOVE "%DOWNLOAD_LOCAL_TMP%" "%DOWNLOAD_LOCAL%" 2> NUL > NUL
             echo Ok
         ) else (
             echo "Error downloading file expected '%DOWNLOAD_SHA1%' but found '%SHA1%' from url %DOWNLOAD_URL%"
-            echo %DOWNLOAD_LOCAL_SHA1%
-            type %DOWNLOAD_LOCAL_SHA1%
             GOTO :END
         )
     )
