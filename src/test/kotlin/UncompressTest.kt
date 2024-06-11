@@ -1,4 +1,5 @@
 import io.airlift.compress.zstd.*
+import korge.*
 import java.io.*
 import kotlin.test.*
 
