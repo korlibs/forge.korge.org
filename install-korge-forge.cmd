@@ -48,7 +48,10 @@ EXIT /B
         TIMEOUT /T 1 /NOBREAK > NUL
 
         CertUtil -hashfile "%DOWNLOAD_LOCAL_TMP%" SHA1 | find /i /v "sha1" | find /i /v "certutil" > %DOWNLOAD_LOCAL_SHA1%
+        TIMEOUT /T 1 /NOBREAK > NUL
+
         set /P SHA1=<%DOWNLOAD_LOCAL_SHA1%
+
         if "%SHA1%"=="%DOWNLOAD_SHA1%" (
             MOVE "%DOWNLOAD_LOCAL_TMP%" "%DOWNLOAD_LOCAL%" 2> NUL > NUL
             echo Ok
