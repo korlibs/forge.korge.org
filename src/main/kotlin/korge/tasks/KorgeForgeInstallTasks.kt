@@ -12,6 +12,12 @@ object OpenTask : Task("Opening KorGE Forge") {
     }
 }
 
+object OpenInstallFolderTask : Task("Opening Install Folder for KorGE Forge") {
+    override suspend fun execute(context: TaskContext) {
+        ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+    }
+}
+
 object TestTask1 : Task("Test1") {
     override suspend fun execute(context: TaskContext) {
     }

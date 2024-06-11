@@ -58,6 +58,9 @@ fun InstallerApp() {
                 Button("Open", enabled = action == null && installed) {
                     action = OpenTask
                 }
+                Button("Open Installation Folder", enabled = action == null && installed) {
+                    action = OpenInstallFolderTask
+                }
                 //Button("Test1", enabled = action == null) {
                 //    action = TestTask1
                 //}
