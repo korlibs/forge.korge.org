@@ -58,6 +58,7 @@ EXIT /B
         ) else (
             echo "Error downloading file expected '%DOWNLOAD_SHA1%' but found '%SHA1%' from url %DOWNLOAD_URL%"
             echo %DOWNLOAD_LOCAL_SHA1%
+            type %DOWNLOAD_LOCAL_SHA1%
             exit /b
         )
     )
