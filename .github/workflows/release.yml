@@ -42,4 +42,4 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/libs/korge-forge-installer.jar
+            build/korge-forge-installer.jar
