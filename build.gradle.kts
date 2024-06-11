@@ -12,6 +12,7 @@ buildscript {
 
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    //id("edu.sc.seis.launch4j") version "3.0.5"
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.compose") version "2.0.0"
     application
@@ -96,10 +97,17 @@ tasks {
         }
     }
 
-    val createExe by creating(Copy::class) {
+    val createInstallerJar by creating(Copy::class) {
         dependsOn(proguard)
         from("$buildDir/libs/korge-forge-installer-1.0.0-all.min.jar")
         into("$buildDir")
         rename { "korge-forge-installer.jar" }
     }
 }
+
+//launch4j {
+//    mainClassName = appMainClassName
+//    icon = "${projectDir}/install.ico"
+//}
+
+// "c:\dev\graalvm-jdk-22.0.1+8.1\bin\native-image" -Djava.awt.headless=false -jar korge-forge-installer.jar --no-fallback --report-unsupported-elements-at-runtime
