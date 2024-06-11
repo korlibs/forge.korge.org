@@ -43,10 +43,12 @@ EXIT /B
 
     if not exist "%DOWNLOAD_LOCAL%" (
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
-        powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
-        for /f %%i in (
+        curl -s "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%"
+        REM powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
+        REM timeout /T 2 /NOBREAK > NUL
+        FOR /f %%i IN (
             'powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Filehash -Path '%DOWNLOAD_LOCAL_TMP:\=\\%' -Algorithm SHA1).Hash"'
-        ) do set SHA1=%%i
+        ) DO SET SHA1=%%i
 
         if /i "%SHA1%"=="%DOWNLOAD_SHA1%" (
             MOVE "%DOWNLOAD_LOCAL_TMP%" "%DOWNLOAD_LOCAL%" 2> NUL > NUL
@@ -59,3 +61,4 @@ EXIT /B
 EXIT /B
 
 :END
+EXIT -1
