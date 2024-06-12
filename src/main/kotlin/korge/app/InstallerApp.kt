@@ -23,9 +23,12 @@ data class TaskInfo(val task: String, val ratio: Double)
 
 @Composable
 fun InstallerApp() {
+    //var action by state<Task?>(null)
     var action by state<Task?>(null)
     var activeTasks by state<List<TaskInfo>>(emptyList())
     val installed = KorgeForgeInstallTools.isInstalled()
+
+    println("InstallerApp: action=$action")
 
     LaunchedEffect(action) {
         println("LaunchedEffect(action): $action")
@@ -53,15 +56,23 @@ fun InstallerApp() {
             )
             HStack {
                 Button(if (installed) "Reinstall" else "Install", enabled = action == null) {
+                    println("Install pressed")
                     action = InstallKorgeForge
                 }
                 Button("Uninstall", enabled = action == null && installed) {
+                    println("Uninstall pressed")
                     action = UninstallKorgeForge
                 }
+                Button("Delete Download Cache", enabled = action == null && DeleteDownloadArtifacts.enabled) {
+                    println("Delete Cache pressed")
+                    action = DeleteDownloadArtifacts
+                }
                 Button("Open", enabled = action == null && installed) {
+                    println("Open pressed")
                     action = OpenTask
                 }
-                Button("Open Installation Folder", enabled = action == null && installed) {
+                Button("Open Folder", enabled = action == null && installed) {
+                    println("Open Installation Folder")
                     action = OpenInstallFolderTask
                 }
                 //Button("Test1", enabled = action == null) {

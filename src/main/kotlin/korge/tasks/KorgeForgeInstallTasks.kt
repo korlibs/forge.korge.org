@@ -8,13 +8,20 @@ val KORGE_FORGE_VERSION = "2024.1"
 
 object OpenTask : Task("Opening KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
-        ProcessBuilder("cmd", "/c", "start", InstallKorgeForge.exe.absolutePath).start().waitFor()
+        when (OS.CURRENT) {
+            OS.OSX -> ProcessBuilder("open", InstallKorgeForge.exe.parentFile.parentFile.parentFile.absolutePath).start().waitFor()
+            else -> ProcessBuilder("cmd", "/c", "start", InstallKorgeForge.exe.absolutePath).start().waitFor()
+        }
     }
 }
 
 object OpenInstallFolderTask : Task("Opening Install Folder for KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
-        ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+        when (OS.CURRENT) {
+            OS.OSX -> ProcessBuilder("open", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+            else -> ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+        }
+
     }
 }
 
@@ -28,7 +35,7 @@ object TestTask2 : Task("Test2") {
     }
 }
 
-object UninstallKorgeForge : Task("Uninstalling KorGE Forge", DeleteKorgeForgeFolder, DeleteDownloadArtifacts) {
+object UninstallKorgeForge : Task("Uninstalling KorGE Forge", DeleteKorgeForgeFolder) {
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
             OS.LINUX -> {
@@ -53,14 +60,19 @@ object DeleteKorgeForgeFolder : Task("Deleting KorGE Forge Folder") {
 }
 
 object DeleteDownloadArtifacts : Task("Deleting KorGE Forge Downloaded Artifacts") {
+    val enabled get() = DownloadJBR.localFile.exists()
+
     override suspend fun execute(context: TaskContext) {
         DownloadJBR.localFile.delete()
         DownloadForge.localFile.delete()
     }
 }
 
-object InstallKorgeForge : Task("Installing KorGE Forge", ExtractForge, ExtractJBR) {
-    val exe = File(ExtractForge.outDirectory, "bin/korge64.exe")
+object InstallKorgeForge : Task("Installing KorGE Forge", ExtractForge, ExtractJBR, ExtractExtraLibs, ExtractProductInfo) {
+    val exe = when (OS.CURRENT) {
+        OS.OSX -> File(ExtractForge.outDirectory, "MacOS/korge")
+        else -> File(ExtractForge.outDirectory, "bin/korge64.exe")
+    }
     val ico = File(ExtractForge.outDirectory, "bin/korge.ico")
     val desc = "KorGE Forge $KORGE_FORGE_VERSION"
 
@@ -126,8 +138,9 @@ object DownloadJBR : Task("Download JBR", DownloadForge) {
 }
 
 object DownloadForge : Task("Download KorGE Forge") {
+    val BASE_URL = "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha"
     val baseFile = "korgeforge-241.15989.20240606.tar.zst"
-    val url = "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/$baseFile"
+    val url = "$BASE_URL/$baseFile"
     val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E-"
 
     val localFile by lazy { KorgeForgeInstallTools.getInstallerLocalFile(baseFile) }
@@ -143,12 +156,55 @@ object DownloadForge : Task("Download KorGE Forge") {
     }
 }
 
+object DownloadForgeExtraLibs : Task("Download KorGE Forge Extra Libs") {
+    val baseFile = "korgeforge-extra-libs-241.15989.20240606.tar.zst"
+    val url = "${DownloadForge.BASE_URL}/$baseFile"
+    val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E-"
+
+    val localFile by lazy { KorgeForgeInstallTools.getInstallerLocalFile(baseFile) }
+
+    override suspend fun execute(context: TaskContext) {
+        context.report(url)
+        downloadFile(
+            url,
+            localFile,
+            sha256 = sha256,
+            progress = context::report
+        )
+    }
+}
+
+object DownloadForgeProductInfo : Task("Download KorGE Forge Product Info") {
+    val baseFile = "korgeforge-mac-product-info.241.15989.20240606.json"
+    val url = "${DownloadForge.BASE_URL}/$baseFile"
+    val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E-"
+
+    val localFile by lazy { KorgeForgeInstallTools.getInstallerLocalFile(baseFile) }
+
+    override suspend fun execute(context: TaskContext) {
+        context.report(url)
+        downloadFile(
+            url,
+            localFile,
+            sha256 = sha256,
+            progress = context::report
+        )
+    }
+}
+
+
+
+
 object KorgeForgeInstallTools {
     val Folder = when (OS.CURRENT) {
         OS.LINUX -> File(System.getProperty("user.home"), ".local/share/KorGEForge")
+        OS.OSX -> File(System.getProperty("user.home"), "Applications/KorGE Forge ${KORGE_FORGE_VERSION}.app/Contents")
         else -> File(System.getProperty("user.home"), "AppData/Local/KorGEForge")
     }
-    val VersionFolder = File(Folder, KORGE_FORGE_VERSION)
+    val VersionFolder = when (OS.CURRENT) {
+        OS.OSX -> Folder
+        else -> File(Folder, KORGE_FORGE_VERSION)
+    }
     val START_MENU = when (OS.CURRENT) {
         OS.LINUX -> "${System.getProperty("user.home")}/.local/share/applications"
         else -> "${System.getenv("APPDATA")}\\Microsoft\\Windows\\Start Menu"
@@ -202,7 +258,48 @@ object ExtractForge : Task("Extracting KorGE Forge", DownloadForge) {
     }
 }
 
-object ExtractJBR : Task("Extracting JBR", DownloadJBR, ExtractForge) {
+object ExtractExtraLibs : Task("Extracting Extra Libs", DownloadForgeExtraLibs, ExtractForge) {
+    val outDirectory = File(ExtractForge.outDirectory, "lib-native")
+
+    val jnaOs = when (OS.CURRENT) {
+        OS.WINDOWS -> "win32"
+        OS.OSX -> "darwin"
+        OS.LINUX -> "linux"
+        OS.OTHER -> "other"
+    }
+    val jnaArch = when (ARCH.CURRENT) {
+        ARCH.X64 -> "x86-64"
+        ARCH.ARM -> "aarch64"
+        ARCH.UNKNOWN -> "unknown"
+    }
+
+    override suspend fun execute(context: TaskContext) {
+        context.report("${outDirectory.absoluteFile}")
+        TarTools(processOutputName = {
+            if (it.contains("jna")) {
+                when {
+                    it.contains(jnaOs) && it.contains(jnaArch) -> it.replace("$jnaOs-$jnaArch", jnaArch)
+                    else -> null
+                }
+            } else {
+                it
+            }
+        }).extractTarZstd(DownloadForgeExtraLibs.localFile, outDirectory, context::report)
+        outDirectory.copyRecursively(File(outDirectory.parentFile, "lib"), overwrite = true)
+    }
+}
+
+object ExtractProductInfo : Task("Extracting Product Info", DownloadForgeProductInfo, ExtractForge) {
+    val outDirectory = File(ExtractForge.outDirectory, "Resources")
+
+    override suspend fun execute(context: TaskContext) {
+        if (OS.CURRENT == OS.OSX) {
+            DownloadForgeProductInfo.localFile.copyTo(File(outDirectory, "product-info.json"), overwrite = true)
+        }
+    }
+}
+
+object ExtractJBR : Task("Extracting JBR", DownloadJBR, ExtractExtraLibs, ExtractForge, ExtractProductInfo) {
     val outDirectory = File(ExtractForge.outDirectory, "jbr")
 
     override suspend fun execute(context: TaskContext) {
