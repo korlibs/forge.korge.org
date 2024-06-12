@@ -1,0 +1,39 @@
+<html>
+  <div><a href="https://korge.org/">KorGE</a></div>
+  <div>
+    <a href="https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.cmd" onclick="
+        const e = this;
+
+        var saveBlob = (function () {
+            var a = document.createElement('a');
+            document.body.appendChild(a);
+            a.style = 'display: none';
+            return function (blob, fileName) {
+                var url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = fileName;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            };
+        }());
+
+        (async () => {
+          const blob = await (await fetch(e.href)).blob()
+          saveBlob(blob, e.href.split('/').pop())
+        })();
+        return false
+      ">Download Windows 10/11 Installer</a>
+  </div>
+  <div>
+    <div>Windows 10 Script</div>
+    <code>
+      <pre>curl -s -L https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"</pre>
+    </code>
+  </div>
+  <div>
+    <div>Linux/Mac Script</div>
+    <code>
+      <pre>sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</pre>
+    </code>
+  </div>
+</html>
