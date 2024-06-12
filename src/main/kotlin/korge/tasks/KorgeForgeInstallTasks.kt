@@ -12,7 +12,9 @@ object OpenTask : Task("Opening KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
             OS.OSX -> ProcessBuilder("open", KorgeForgeInstallTools.MacAPP.absolutePath).start().waitFor()
-            else -> ProcessBuilder("cmd", "/c", "start", InstallKorgeForge.exe.absolutePath).start().waitFor()
+            OS.LINUX -> ProcessBuilder("gtk-launch", KorgeForgeInstallTools.KORGE_FORGE_DESKTOP.name).start().waitFor()
+            OS.WINDOWS -> ProcessBuilder("cmd", "/c", "start", InstallKorgeForge.exe.absolutePath).start().waitFor()
+            else -> TODO()
         }
     }
 }
@@ -21,7 +23,9 @@ object OpenInstallFolderTask : Task("Opening Install Folder for KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
             OS.OSX -> ProcessBuilder("open", "-R", KorgeForgeInstallTools.MacAPP.absolutePath).start().waitFor()
-            else -> ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+            OS.LINUX -> ProcessBuilder("xdg-open", File(KorgeForgeInstallTools.VersionFolder, "bin").absolutePath).start().waitFor()
+            OS.WINDOWS -> ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+            else -> TODO()
         }
 
     }
@@ -210,9 +214,6 @@ object DownloadForgeProductInfo : Task("Download KorGE Forge Product Info") {
         )
     }
 }
-
-
-
 
 object KorgeForgeInstallTools {
     val Folder = when (OS.CURRENT) {
