@@ -4,6 +4,8 @@ SETLOCAL EnableDelayedExpansion
 set KORGE_FORGE_VERSION=v0.1.0
 echo KorGE Forge Installer %KORGE_FORGE_VERSION%
 
+set JRE_LOCAL=%LOCALAPPDATA%\KorgeForgeInstaller
+
 set INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/%KORGE_FORGE_VERSION%/korge-forge-installer.jar
 set INSTALLER_SHA1=16af352f759aa511cd4607e1974e1acc315bc8b6
 set INSTALLER_LOCAL_FILE=korge-forge-installer-%KORGE_FORGE_VERSION%.jar
@@ -12,7 +14,6 @@ set INSTALLER_LOCAL=%JRE_LOCAL%\%INSTALLER_LOCAL_FILE%
 set JRE_URL=https://github.com/korlibs/universal-jre/releases/download/0.0.1/OpenJDK21U-jre_x64_windows_hotspot_21.0.3_9.zip
 REM set JRE_URL=https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.3%2B9/OpenJDK21U-jre_x64_windows_hotspot_21.0.3_9.zip
 set JRE_SHA1=0a36d67c443387bab59e335b8a073d7d0f3a9575
-set JRE_LOCAL=%LOCALAPPDATA%\KorgeForgeInstaller
 set JRE_ZIP=%JRE_LOCAL%\jre.zip
 set JRE_JAVA_BIN=%JRE_LOCAL%\jdk-21.0.3+9-jre\bin
 
