@@ -11,7 +11,7 @@ val DEFAULT_SPACING = 4
 
 @Composable
 fun Container(layoutManager: LayoutManager?, content: @Composable () -> Unit) {
-    ComposeComponent(
+    ComposeAwtComponent(
         { Container().also { it.layout = layoutManager } },
         {
             set(layoutManager) { this.layout = layoutManager }
@@ -33,7 +33,7 @@ fun Box(content: @Composable () -> Unit) {
 
 @Composable
 fun BackgroundPanel(image: Image?, margin: Insets = Insets(0, 0, 0, 0), content: @Composable () -> Unit) {
-    ComposeComponent(
+    ComposeAwtComponent(
         { ImagePanel(null).also { it.layout = GridLayout(1, 1) } },
         {
             set(image) { this.img = image }
@@ -77,7 +77,7 @@ fun HFill(spacing: Int = DEFAULT_SPACING, content: @Composable () -> Unit) {
 
 @Composable
 fun Label(text: String, color: Color? = null) {
-    ComposeComponent({ JLabel("").also { it.isOpaque = false } }, {
+    ComposeAwtComponent({ JLabel("").also { it.isOpaque = false } }, {
         set(text) { this.text = it }
         set(color) { this.foreground = color }
     })
@@ -92,7 +92,7 @@ class MyJButton : JButton() {
 
 @Composable
 fun Button(text: String, enabled: Boolean = true, onClick: () -> Unit = { }) {
-    ComposeComponent({ MyJButton().also { it.isOpaque = false } }, {
+    ComposeAwtComponent({ MyJButton().also { it.isOpaque = false } }, {
         set(text) { this.text = it }
         set(enabled) { this.isEnabled = enabled }
         set(onClick) {
@@ -108,14 +108,14 @@ fun Button(text: String, enabled: Boolean = true, onClick: () -> Unit = { }) {
 
 @Composable
 fun Image(image: Image?) {
-    ComposeComponent({ JLabel("") }, {
+    ComposeAwtComponent({ JLabel("") }, {
         set(image) { this.icon = ImageIcon(image) }
     })
 }
 
 @Composable
 fun ProgressBar(progress: Double) {
-    ComposeComponent({ JProgressBar(0, 1000) }, {
+    ComposeAwtComponent({ JProgressBar(0, 1000) }, {
         set(progress) { this.value = (it.coerceIn(0.0, 1.0) * 1000).toInt() }
     })
 }
