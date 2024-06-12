@@ -1,6 +1,8 @@
 <html>
   <div>
-    <a href="https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.cmd" onclick="
+    <div>Windows 10 Script</div>
+    <div>
+      <a href="https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.cmd" onclick="
         const e = this;
 
         var saveBlob = (function () {
@@ -22,15 +24,16 @@
         })();
         return false
       ">Download Windows 10/11 Installer</a>
-  </div>
-  <div>
-    <div>Windows 10 Script</div>
+    </div>
     <code>
       <pre>curl -s -L https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"</pre>
     </code>
   </div>
   <div>
     <div>Linux/Mac Script</div>
+    <div>
+      <a href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">Java installer</a>
+    </div>
     <code>
       <pre>sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</pre>
     </code>
