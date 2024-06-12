@@ -1,4 +1,6 @@
+import org.jetbrains.kotlin.daemon.common.*
 import proguard.gradle.*
+import java.security.MessageDigest
 
 buildscript {
     repositories {
@@ -22,6 +24,11 @@ plugins {
 
 group = "org.korge"
 version = "1.0.0"
+
+var projectVersion = System.getenv("FORCED_VERSION")
+    ?.replaceFirst(Regex("^refs/tags/"), "")
+    ?: "unknown"
+//?: props.getProperty("version")
 
 repositories {
     mavenLocal()
@@ -102,6 +109,15 @@ tasks {
         from("$buildDir/libs/korge-forge-installer-1.0.0-all.min.jar")
         into("$buildDir")
         rename { "korge-forge-installer.jar" }
+        doLast {
+            val installKorgeForgeCmd = File(projectDir, "install-korge-forge.cmd").readText()
+            val installKorgeForgeSha1 = MessageDigest.getInstance("SHA1").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
+            val newInstallKorgeForgeCmd = installKorgeForgeCmd
+                .replace(Regex("set INSTALLER_URL=(.*)"), "set INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
+                .replace(Regex("set INSTALLER_SHA1=(.*)"), "set INSTALLER_SHA1=$installKorgeForgeSha1")
+                .replace(Regex("set KORGE_FORGE_VERSION=(.*)"), "set KORGE_FORGE_VERSION=$projectVersion")
+            File(projectDir, "build/install-korge-forge.cmd").writeText(newInstallKorgeForgeCmd)
+        }
     }
 }
 
