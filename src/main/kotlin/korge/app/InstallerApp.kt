@@ -56,7 +56,7 @@ fun InstallerApp() {
         //Image(installerImage)
         VStack {
             Label(
-                "KorGE Forge Installer: Detected os=${OS.CURRENT}, arch=${ARCH.CURRENT}, installed=$installed",
+                "KorGE Forge Installer: Detected os=${OS.str()}, arch=${ARCH.str()}, installed=$installed",
                 color = Color.WHITE
             )
             HStack {
