@@ -15,3 +15,13 @@ curl -s -L https://github.com/korlibs/korge-forge-installer/releases/download/v0
 ```bash
 powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/korlibs/korge-forge-installer/releases/download/v0.0.1/install-korge-forge.cmd', '%APPDATA:\=\\%\\install-korge-forge.cmd')" && "%APPDATA%\install-korge-forge.cmd"
 ```
+
+## LINUX
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/48a8910385374c5e56d2835b48e5a9692cd6ec1e/install-korge-forge.sh)"
+```
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"
+```
