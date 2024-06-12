@@ -5,6 +5,12 @@ export FILE_URL=https://github.com/korlibs/korge-forge-installer/releases/downlo
 export EXPECTED_SHA1=2bfcc019ccfde3eb432626e4e6cf34e95239e787
 export FILE_NAME=~/.local/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
+if [ "$(uname -s)" = 'Darwin' ]; then
+  export sha1sum=shasum
+else
+  export sha1sum=sha1sum
+fi
+
 # Download the file if it doesn't exist
 if [ ! -f "$FILE_NAME" ]; then
   mkdir -p ~/.local > /dev/null
@@ -16,7 +22,7 @@ if [ ! -f "$FILE_NAME" ]; then
   fi
 
   # Calculate the SHA-1 checksum of the downloaded file
-  ACTUAL_SHA1=$(sha1sum "$FILE_NAME.tmp" | awk '{ print $1 }')
+  ACTUAL_SHA1=$($sha1sum "$FILE_NAME.tmp" | awk '{ print $1 }')
 
   # Compare the actual SHA-1 checksum with the expected one
   if [ "${ACTUAL_SHA1}" != "${EXPECTED_SHA1}" ]; then
