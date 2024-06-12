@@ -52,19 +52,24 @@ EXIT /B
     if not exist "%DOWNLOAD_LOCAL%" (
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
         REM curl -s -L "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%" && timeout /T 1 /NOBREAK > NUL
-        powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')" && timeout /T 3 /NOBREAK > NUL
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')" && TIMEOUT /T 3 /NOBREAK > NUL
         REM powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-BitsTransfer -Source '%DOWNLOAD_URL%' -Destination '%DOWNLOAD_LOCAL_TMP:\=\\%'"
 
+        SET /A SHA1_RETRIES=10
+
         :REPEAT_SHA1
-        echo Computing hash...
+        ECHO Computing hash...
         FOR /f %%i IN (
             'powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Filehash -Path '%DOWNLOAD_LOCAL_TMP:\=\\%' -Algorithm SHA1).Hash"'
         ) DO SET SHA1=%%i
 
-        if /i "%SHA1%"=="" (
-            echo File not ready, retrying in 1 second
-            timeout /T 1 /NOBREAK > NUL
-            GOTO REPEAT_SHA1
+        IF %SHA1_RETRIES% GE 1 (
+            IF NOT /i "%SHA1%"=="%DOWNLOAD_SHA1%" (
+                ECHO File not ready, retrying in 1 second (retries %SHA1_RETRIES%)
+                TIMEOUT /T 1 /NOBREAK > NUL
+                SET /A SHA1_RETRIES-=1
+                GOTO REPEAT_SHA1
+            )
         )
 
         if /i "%SHA1%"=="%DOWNLOAD_SHA1%" (
