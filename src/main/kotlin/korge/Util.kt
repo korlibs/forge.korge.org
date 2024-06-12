@@ -29,7 +29,10 @@ enum class ARCH {
         val CURRENT: ARCH by lazy {
             val arch = System.getProperty("os.arch").lowercase()
             when {
-                (System.getenv("PROCESSOR_ARCHITECTURE") ?: "").contains("arm", ignoreCase = true) || arch.contains("arm", ignoreCase = true) || arch.contains("aarch", ignoreCase = true) -> ARM
+                (System.getenv("PROCESSOR_ARCHITECTURE") ?: "").contains("arm", ignoreCase = true)
+                        || (System.getenv("ProgramFiles(Arm)") ?: "").isNotBlank()
+                        || arch.contains("arm", ignoreCase = true)
+                        || arch.contains("aarch", ignoreCase = true) -> ARM
                 arch.contains("x86_64", ignoreCase = true) || arch.contains("amd64", ignoreCase = true) -> X64
                 else -> X64
             }
