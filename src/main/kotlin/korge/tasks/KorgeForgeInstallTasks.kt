@@ -11,7 +11,7 @@ val KORGE_FORGE_VERSION = "2024.1"
 object OpenTask : Task("Opening KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
-            OS.OSX -> ProcessBuilder("open", InstallKorgeForge.exe.parentFile.parentFile.parentFile.absolutePath).start().waitFor()
+            OS.OSX -> ProcessBuilder("open", KorgeForgeInstallTools.MacAPP.absolutePath).start().waitFor()
             else -> ProcessBuilder("cmd", "/c", "start", InstallKorgeForge.exe.absolutePath).start().waitFor()
         }
     }
@@ -20,7 +20,7 @@ object OpenTask : Task("Opening KorGE Forge") {
 object OpenInstallFolderTask : Task("Opening Install Folder for KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
-            OS.OSX -> ProcessBuilder("open", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
+            OS.OSX -> ProcessBuilder("open", "-R", KorgeForgeInstallTools.MacAPP.absolutePath).start().waitFor()
             else -> ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
         }
 
@@ -220,6 +220,7 @@ object KorgeForgeInstallTools {
         OS.OSX -> File(System.getProperty("user.home"), "Applications/KorGE Forge ${KORGE_FORGE_VERSION}.app/Contents")
         else -> File(System.getProperty("user.home"), "AppData/Local/KorGEForge")
     }
+    val MacAPP = Folder.parentFile
     val VersionFolder = when (OS.CURRENT) {
         OS.OSX -> Folder
         else -> File(Folder, KORGE_FORGE_VERSION)
