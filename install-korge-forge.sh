@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 export KORGE_FORGE_VERSION=v0.0.2
 export FILE_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v0.0.2/korge-forge-installer.jar
@@ -18,7 +18,7 @@ if [ ! -f "$FILE_NAME" ]; then
     ACTUAL_SHA1=$(sha1sum "$FILE_NAME.tmp" | awk '{ print $1 }')
 
     # Compare the actual SHA-1 checksum with the expected one
-    if [ "${ACTUAL_SHA1,,}" != "${EXPECTED_SHA1,,}" ]; then
+    if [ "${ACTUAL_SHA1}" != "${EXPECTED_SHA1}" ]; then
         echo "SHA-1 checksum does not match for $FILE_URL in $FILE_NAME.tmp"
         echo "Expected: $EXPECTED_SHA1"
         echo "Actual:   $ACTUAL_SHA1"
