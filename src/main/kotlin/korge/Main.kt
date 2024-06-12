@@ -46,11 +46,28 @@ fun main(args: Array<String>) {
         }
         else -> {
             ComposeJFrame("Install KorGE Forge $KORGE_FORGE_VERSION", Dimension(640, 400), configureFrame = { frame ->
-                frame.iconImage = runCatching { ImageIO.read(InstallKorgeForge::class.java.getResource("/install.png")) }.getOrNull()
+                val image = runCatching { ImageIO.read(InstallKorgeForge::class.java.getResource("/install.png")) }.getOrNull()
+                try {
+                    if (image != null) setTaskbarIcon(image)
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
+                frame.iconImage = image
                 frame.isResizable = false
             }) {
                 InstallerApp()
             }
         }
     }
+}
+
+private fun setTaskbarIcon(image: Image) {
+    val taskBar = ClassLoader.getSystemClassLoader().loadClass("java.awt.Taskbar")
+    val getTaskBar = taskBar.methods.firstOrNull { it.name == "getTaskbar" }
+    val taskBarInstance = getTaskBar?.invoke(null)
+    val setIconImage = taskBar.methods.firstOrNull { it.name == "setIconImage" }
+    //println("taskBarInstance=$taskBarInstance")
+    //Taskbar.getTaskbar().iconImage = image
+    setIconImage?.invoke(taskBarInstance, image)
+    //println("method=$setIconImage")
 }
