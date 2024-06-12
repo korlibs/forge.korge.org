@@ -7,27 +7,28 @@ export FILE_NAME=~/.local/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
 # Download the file if it doesn't exist
 if [ ! -f "$FILE_NAME" ]; then
-    echo "File not found. Downloading..."
-    curl -s -L "$FILE_URL" -o "$FILE_NAME.tmp"
-    if [ $? -ne 0 ]; then
-        echo "Failed to download the file."
-        exit 1
-    fi
+  mkdir -p ~/.local > /dev/null
+  echo "File not found. Downloading..."
+  curl -s -L "$FILE_URL" -o "$FILE_NAME.tmp"
+  if [ $? -ne 0 ]; then
+    echo "Failed to download the file."
+    exit 1
+  fi
 
-    # Calculate the SHA-1 checksum of the downloaded file
-    ACTUAL_SHA1=$(sha1sum "$FILE_NAME.tmp" | awk '{ print $1 }')
+  # Calculate the SHA-1 checksum of the downloaded file
+  ACTUAL_SHA1=$(sha1sum "$FILE_NAME.tmp" | awk '{ print $1 }')
 
-    # Compare the actual SHA-1 checksum with the expected one
-    if [ "${ACTUAL_SHA1}" != "${EXPECTED_SHA1}" ]; then
-        echo "SHA-1 checksum does not match for $FILE_URL in $FILE_NAME.tmp"
-        echo "Expected: $EXPECTED_SHA1"
-        echo "Actual:   $ACTUAL_SHA1"
-        exit 1
-    fi
+  # Compare the actual SHA-1 checksum with the expected one
+  if [ "${ACTUAL_SHA1}" != "${EXPECTED_SHA1}" ]; then
+    echo "SHA-1 checksum does not match for $FILE_URL in $FILE_NAME.tmp"
+    echo "Expected: $EXPECTED_SHA1"
+    echo "Actual:   $ACTUAL_SHA1"
+    exit 1
+  fi
 
-    mv "$FILE_NAME.tmp" "$FILE_NAME"
+  mv "$FILE_NAME.tmp" "$FILE_NAME"
 
-    echo "File verification succeeded."
+  echo "File verification succeeded."
 fi
 
 java -jar "$FILE_NAME" $*
