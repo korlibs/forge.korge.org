@@ -1,10 +1,15 @@
 package korge
 
-import io.airlift.compress.zstd.*
-import org.apache.commons.compress.archivers.tar.*
-import java.io.*
-import java.nio.file.*
-import java.util.zip.*
+import io.airlift.compress.zstd.ZstdInputStream
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+import java.io.File
+import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.PosixFilePermission
+import java.util.zip.GZIPInputStream
+
 
 open class TarTools(
     val removeFirstDir: Boolean = false,
@@ -53,6 +58,27 @@ open class TarTools(
                     else -> {
                         outputFile.parentFile?.mkdirs()
                         Files.copy(tarInput, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        Files.setLastModifiedTime(outputFile.toPath(), entry.lastModifiedTime)
+
+                        if (OS.CURRENT != OS.WINDOWS) {
+                            val mode = "755".toInt(8)
+
+                            // Convert mode to set of PosixFilePermission
+                            val permissions = mutableSetOf<PosixFilePermission>()
+
+                            if (mode and 0b100000000 != 0) permissions.add(PosixFilePermission.OWNER_READ)
+                            if (mode and 0b010000000 != 0) permissions.add(PosixFilePermission.OWNER_WRITE)
+                            if (mode and 0b001000000 != 0) permissions.add(PosixFilePermission.OWNER_EXECUTE)
+                            if (mode and 0b000100000 != 0) permissions.add(PosixFilePermission.GROUP_READ)
+                            if (mode and 0b000010000 != 0) permissions.add(PosixFilePermission.GROUP_WRITE)
+                            if (mode and 0b000001000 != 0) permissions.add(PosixFilePermission.GROUP_EXECUTE)
+                            if (mode and 0b000000100 != 0) permissions.add(PosixFilePermission.OTHERS_READ)
+                            if (mode and 0b000000010 != 0) permissions.add(PosixFilePermission.OTHERS_WRITE)
+                            if (mode and 0b000000001 != 0) permissions.add(PosixFilePermission.OTHERS_EXECUTE)
+
+                            // Set the permissions
+                            Files.setPosixFilePermissions(outputFile.toPath(), permissions)
+                        }
                     }
                 }
             }

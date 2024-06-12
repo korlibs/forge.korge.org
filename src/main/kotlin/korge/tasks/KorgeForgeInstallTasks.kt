@@ -30,8 +30,15 @@ object TestTask2 : Task("Test2") {
 
 object UninstallKorgeForge : Task("Uninstalling KorGE Forge", DeleteKorgeForgeFolder, DeleteDownloadArtifacts) {
     override suspend fun execute(context: TaskContext) {
-        KorgeForgeInstallTools.START_MENU_LNK.delete()
-        KorgeForgeInstallTools.DESKTOP_LNK.delete()
+        when (OS.CURRENT) {
+            OS.LINUX -> {
+                KorgeForgeInstallTools.KORGE_FORGE_DESKTOP.delete()
+            }
+            else -> {
+                KorgeForgeInstallTools.START_MENU_LNK.delete()
+                KorgeForgeInstallTools.DESKTOP_LNK.delete()
+            }
+        }
     }
 }
 
@@ -58,8 +65,28 @@ object InstallKorgeForge : Task("Installing KorGE Forge", ExtractForge, ExtractJ
     val desc = "KorGE Forge $KORGE_FORGE_VERSION"
 
     override suspend fun execute(context: TaskContext) {
-        createWindowsLnk(exe, KorgeForgeInstallTools.START_MENU_LNK, ico, desc)
-        createWindowsLnk(exe, KorgeForgeInstallTools.DESKTOP_LNK, ico, desc)
+        when (OS.CURRENT) {
+            OS.LINUX -> {
+
+                KorgeForgeInstallTools.KORGE_FORGE_DESKTOP.writeText("""
+                    [Desktop Entry]
+                    Name=KorGE Forge ${KORGE_FORGE_VERSION}
+                    Exec="${KorgeForgeInstallTools.VersionFolder}/bin/korge.sh" %u
+                    Version=1.0
+                    Type=Application
+                    Categories=Development;IDE;
+                    Terminal=false
+                    Icon=${KorgeForgeInstallTools.VersionFolder}/bin/korge.svg
+                    Comment=Where Kotlin Games Are Created
+                    StartupWMClass=korge-forge
+                    StartupNotify=true
+                """.trimIndent())
+            }
+            else -> {
+                createWindowsLnk(exe, KorgeForgeInstallTools.START_MENU_LNK, ico, desc)
+                createWindowsLnk(exe, KorgeForgeInstallTools.DESKTOP_LNK, ico, desc)
+            }
+        }
     }
 }
 
@@ -118,14 +145,17 @@ object DownloadForge : Task("Download KorGE Forge") {
 
 object KorgeForgeInstallTools {
     val Folder = when (OS.CURRENT) {
+        OS.LINUX -> File(System.getProperty("user.home"), ".local/share/KorGEForge")
         else -> File(System.getProperty("user.home"), "AppData/Local/KorGEForge")
     }
     val VersionFolder = File(Folder, KORGE_FORGE_VERSION)
     val START_MENU = when (OS.CURRENT) {
+        OS.LINUX -> "${System.getProperty("user.home")}/.local/share/applications"
         else -> "${System.getenv("APPDATA")}\\Microsoft\\Windows\\Start Menu"
     }
     val START_MENU_LNK = File(START_MENU, "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
     val DESKTOP_LNK = File(File(System.getenv("USERPROFILE"), "Desktop"), "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
+    val KORGE_FORGE_DESKTOP = File(START_MENU, "korge-forge-${KORGE_FORGE_VERSION}.desktop")
 
     fun isInstalled(): Boolean = VersionFolder.isDirectory
 
@@ -146,11 +176,24 @@ object ExtractForge : Task("Extracting KorGE Forge", DownloadForge) {
         KorgeForgeInstallTools.VersionFolder
     }
 
+    val osStr: String = when (OS.CURRENT) {
+        OS.WINDOWS -> "win"
+        OS.OSX -> "mac"
+        OS.LINUX -> "unix"
+        OS.OTHER -> "other"
+    }
+
+    val archStr: String = when (ARCH.CURRENT) {
+        ARCH.X64 -> "x64"
+        ARCH.ARM -> "arm64"
+        ARCH.UNKNOWN -> "x64"
+    }
+
     override suspend fun execute(context: TaskContext) {
         context.report("${outDirectory.absoluteFile}")
 
         TarTools(processOutputName = {
-            if (it.startsWith("dist.all") || it.startsWith("dist.win.x64")) {
+            if (it.startsWith("dist.all") || it.startsWith("dist.$osStr.$archStr")) {
                 it.substringAfter('/')
             } else {
                 null
