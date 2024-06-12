@@ -11,7 +11,7 @@ curl -s -L https://raw.githubusercontent.com/korlibs/korge-forge-installer/b7712
 -->
 
 ```bash
-curl -s -L https://github.com/korlibs/korge-forge-installer/releases/download/v0.0.1/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"
+curl -s -L https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"
 ```
 
 ## LINUX / MAC
