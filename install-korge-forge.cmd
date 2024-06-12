@@ -49,9 +49,9 @@ EXIT /B
     REM DOWNLOAD_SHA1
 
     SET DOWNLOAD_LOCAL_TMP=%DOWNLOAD_LOCAL%.tmp
+    SET /A SHA1_RETRIES=3
 
     if not exist "%DOWNLOAD_LOCAL%" (
-        SET /A SHA1_RETRIES=3
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
         curl -s -L "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%" && timeout /T 1 /NOBREAK > NUL
         powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')"
@@ -64,7 +64,7 @@ EXIT /B
                 'powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Filehash -Path '%DOWNLOAD_LOCAL_TMP:\=\\%' -Algorithm SHA1).Hash"'
             ) DO SET SHA1=%%i
 
-            IF %SHA1_RETRIES% GEQ 0 (
+            IF "%SHA1_RETRIES%" GEQ 0 (
                 if /i NOT "%SHA1%"=="%DOWNLOAD_SHA1%" (
                     ECHO "File not ready, retrying in 2 seconds (retries %SHA1_RETRIES%) %DOWNLOAD_LOCAL_TMP:\=\\%"
                     TIMEOUT /T 2 /NOBREAK > NUL
