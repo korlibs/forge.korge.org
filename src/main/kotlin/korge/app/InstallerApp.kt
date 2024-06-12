@@ -28,12 +28,15 @@ fun InstallerApp() {
     val installed = KorgeForgeInstallTools.isInstalled()
 
     LaunchedEffect(action) {
+        println("LaunchedEffect(action): $action")
         if (action != null) {
             try {
                 reasonToAllowFrameClosing = action!!.name
                 TaskExecuter.execute(action!!) {
+                    print("$it     \r")
                     activeTasks = it.map { TaskInfo(it.task.name, it.ratio) }
                 }
+                println()
             } finally {
                 reasonToAllowFrameClosing = null
                 action = null
