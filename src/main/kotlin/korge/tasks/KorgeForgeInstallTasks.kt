@@ -185,7 +185,7 @@ object ExtractForge : Task("Extracting KorGE Forge", DownloadForge) {
 
     val archStr: String = when (ARCH.CURRENT) {
         ARCH.X64 -> "x64"
-        ARCH.ARM -> "arm64"
+        ARCH.ARM -> "aarch64"
         ARCH.UNKNOWN -> "x64"
     }
 
