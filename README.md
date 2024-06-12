@@ -5,6 +5,9 @@
 CMD:
 
 ```bash
-curl -s https://raw.githubusercontent.com/korlibs/korge-forge-installer/5ed63c06e7a9c4567d7853e64bdb742fbcfe8725/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && cmd /c "%APPDATA%\install-korge-forge.cmd"
+curl -s -L https://raw.githubusercontent.com/korlibs/korge-forge-installer/6f1d80c947eeb02fc5ea2e08eae7aaa8f41922b0/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"
 ```
 
+```bash
+curl -s -L https://github.com/korlibs/korge-forge-installer/releases/download/v0.0.1/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"
+```
