@@ -8,7 +8,7 @@ import java.net.*
 import java.security.MessageDigest
 
 enum class OS {
-    WINDOWS, OSX, LINUX, OTHER;
+    WINDOWS, OSX, LINUX;
     companion object {
         val CURRENT: OS by lazy {
             val os = System.getProperty("os.name").lowercase()
@@ -17,21 +17,21 @@ enum class OS {
                 os.contains("win") -> WINDOWS
                 os.contains("mac") -> OSX
                 os.contains("nix") || os.contains("nux") || os.contains("aix") -> LINUX
-                else -> OTHER
+                else -> LINUX
             }
         }
     }
 }
 
 enum class ARCH {
-    X64, ARM, UNKNOWN;
+    X64, ARM;
     companion object {
         val CURRENT: ARCH by lazy {
             val arch = System.getProperty("os.arch").lowercase()
             when {
-                arch.contains("arm") || arch.contains("aarch") -> ARM
-                arch.contains("x86_64") || arch.contains("amd64") -> X64
-                else -> UNKNOWN
+                (System.getenv("PROCESSOR_ARCHITECTURE") ?: "").contains("arm", ignoreCase = true) || arch.contains("arm", ignoreCase = true) || arch.contains("aarch", ignoreCase = true) -> ARM
+                arch.contains("x86_64", ignoreCase = true) || arch.contains("amd64", ignoreCase = true) -> X64
+                else -> X64
             }
         }
     }

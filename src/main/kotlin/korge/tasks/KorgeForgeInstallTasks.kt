@@ -14,7 +14,6 @@ object OpenTask : Task("Opening KorGE Forge") {
             OS.OSX -> ProcessBuilder("open", KorgeForgeInstallTools.MacAPP.absolutePath).start().waitFor()
             OS.LINUX -> ProcessBuilder("gtk-launch", KorgeForgeInstallTools.KORGE_FORGE_DESKTOP.name).start().waitFor()
             OS.WINDOWS -> ProcessBuilder("cmd", "/c", "start", InstallKorgeForge.exe.absolutePath).start().waitFor()
-            else -> TODO()
         }
     }
 }
@@ -25,9 +24,7 @@ object OpenInstallFolderTask : Task("Opening Install Folder for KorGE Forge") {
             OS.OSX -> ProcessBuilder("open", "-R", KorgeForgeInstallTools.MacAPP.absolutePath).start().waitFor()
             OS.LINUX -> ProcessBuilder("xdg-open", File(KorgeForgeInstallTools.VersionFolder, "bin").absolutePath).start().waitFor()
             OS.WINDOWS -> ProcessBuilder("explorer.exe", InstallKorgeForge.exe.parentFile.absolutePath).start().waitFor()
-            else -> TODO()
         }
-
     }
 }
 
@@ -139,7 +136,6 @@ object DownloadJBR : Task("Download JBR", DownloadForge) {
         val _arch = when (arch) {
             ARCH.X64 -> "x64"
             ARCH.ARM -> "aarch64"
-            ARCH.UNKNOWN -> TODO()
         }
 
         return "jbr_jcef-21.0.3-${_os}-${_arch}-b480.1.tar.gz"
@@ -257,13 +253,11 @@ object ExtractForge : Task("Extracting KorGE Forge", DownloadForge) {
         OS.WINDOWS -> "win"
         OS.OSX -> "mac"
         OS.LINUX -> "unix"
-        OS.OTHER -> "other"
     }
 
     val archStr: String = when (ARCH.CURRENT) {
         ARCH.X64 -> "x64"
         ARCH.ARM -> "aarch64"
-        ARCH.UNKNOWN -> "x64"
     }
 
     override suspend fun execute(context: TaskContext) {
@@ -286,12 +280,10 @@ object ExtractExtraLibs : Task("Extracting Extra Libs", DownloadForgeExtraLibs, 
         OS.WINDOWS -> "win32"
         OS.OSX -> "darwin"
         OS.LINUX -> "linux"
-        OS.OTHER -> "other"
     }
     val jnaArch = when (ARCH.CURRENT) {
         ARCH.X64 -> "x86-64"
         ARCH.ARM -> "aarch64"
-        ARCH.UNKNOWN -> "unknown"
     }
 
     override suspend fun execute(context: TaskContext) {
