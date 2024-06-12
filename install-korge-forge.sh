@@ -1,10 +1,10 @@
 #!/bin/sh
 
-export KORGE_FORGE_VERSION=v0.1.0
+export KORGE_FORGE_VERSION=v0.1.1
 echo KorGE Forge Installer $KORGE_FORGE_VERSION
 
 export INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$KORGE_FORGE_VERSION/korge-forge-installer.jar
-export INSTALLER_SHA1=16af352f759aa511cd4607e1974e1acc315bc8b6
+export INSTALLER_SHA1=8b29794bbc14e50f7c4d9c4b673aabbbdcf6cfd1
 export INSTALLER_LOCAL=$HOME/.local/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
 if [ "$(uname -s)" = 'Darwin' ]; then
