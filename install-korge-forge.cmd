@@ -39,7 +39,7 @@ if not exist "%JRE_JAVA_BIN%" (
     echo Ok
 )
 
-"%JRE_JAVA_BIN%\java" -jar %INSTALLER_LOCAL%
+"%JRE_JAVA_BIN%\java" -jar %INSTALLER_LOCAL% %*
 
 EXIT /B
 
