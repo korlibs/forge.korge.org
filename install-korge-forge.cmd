@@ -1,9 +1,9 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
+set KORGE_FORGE_VERSION=v0.1.0
 echo KorGE Forge Installer %KORGE_FORGE_VERSION%
 
-set KORGE_FORGE_VERSION=v0.1.0
 set INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/%KORGE_FORGE_VERSION%/korge-forge-installer.jar
 set INSTALLER_SHA1=16af352f759aa511cd4607e1974e1acc315bc8b6
 set INSTALLER_LOCAL_FILE=korge-forge-installer-%KORGE_FORGE_VERSION%.jar

@@ -111,16 +111,13 @@ tasks {
         rename { "korge-forge-installer.jar" }
         doLast {
             val JAR_SHA1 = MessageDigest.getInstance("SHA1").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
-            File(projectDir, "build/install-korge-forge.cmd").writeText(File(projectDir, "install-korge-forge.cmd").readText()
-                .replace(Regex("set INSTALLER_URL=(.*)"), "set INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
-                .replace(Regex("set INSTALLER_SHA1=(.*)"), "set INSTALLER_SHA1=$JAR_SHA1")
-                .replace(Regex("set KORGE_FORGE_VERSION=(.*)"), "set KORGE_FORGE_VERSION=$projectVersion")
-            )
-            File(projectDir, "build/install-korge-forge.sh").writeText(File(projectDir, "install-korge-forge.sh").readText()
-                .replace(Regex("export FILE_URL=(.*)"), "export FILE_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
-                .replace(Regex("export EXPECTED_SHA1=(.*)"), "export EXPECTED_SHA1=${JAR_SHA1.lowercase()}")
-                .replace(Regex("export KORGE_FORGE_VERSION=(.*)"), "export KORGE_FORGE_VERSION=$projectVersion")
-            )
+            fun String.replaceScriptStrings(): String = this
+                .replace(Regex("INSTALLER_URL=(.*)"), "INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
+                .replace(Regex("INSTALLER_SHA1=(.*)"), "INSTALLER_SHA1=$JAR_SHA1")
+                .replace(Regex("KORGE_FORGE_VERSION=(.*)"), "KORGE_FORGE_VERSION=$projectVersion")
+
+            File(projectDir, "build/install-korge-forge.cmd").writeText(File(projectDir, "install-korge-forge.cmd").readText().replaceScriptStrings())
+            File(projectDir, "build/install-korge-forge.sh").writeText(File(projectDir, "install-korge-forge.sh").readText().replaceScriptStrings())
         }
     }
 }
