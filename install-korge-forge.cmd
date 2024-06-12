@@ -1,4 +1,5 @@
 @echo off
+SETLOCAL EnableDelayedExpansion
 
 set KORGE_FORGE_VERSION=
 
