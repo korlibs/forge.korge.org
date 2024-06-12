@@ -3,6 +3,7 @@ package korge.composable
 import androidx.compose.runtime.*
 import java.awt.*
 import java.awt.event.*
+import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import javax.swing.border.*
 
@@ -82,14 +83,25 @@ fun Label(text: String, color: Color? = null) {
     })
 }
 
+class MyJButton : JButton() {
+    companion object {
+        var lastButtonId = AtomicInteger(0)
+    }
+    val buttonId = lastButtonId.incrementAndGet()
+}
+
 @Composable
 fun Button(text: String, enabled: Boolean = true, onClick: () -> Unit = { }) {
-    ComposeComponent({ JButton("").also { it.isOpaque = false } }, {
+    ComposeComponent({ MyJButton().also { it.isOpaque = false } }, {
         set(text) { this.text = it }
         set(enabled) { this.isEnabled = enabled }
         set(onClick) {
+            //println("Update onClick listener: id=${this.buttonId}, $onClick")
             this.getListeners(ActionListener::class.java).forEach { this.removeActionListener(it) }
-            this.addActionListener { onClick() }
+            this.addActionListener {
+                //println("onClick!: id=${this.buttonId}, $onClick")
+                onClick()
+            }
         }
     })
 }
@@ -100,7 +112,6 @@ fun Image(image: Image?) {
         set(image) { this.icon = ImageIcon(image) }
     })
 }
-
 
 @Composable
 fun ProgressBar(progress: Double) {
