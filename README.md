@@ -19,7 +19,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClien
 ## LINUX
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/485045c9f9da7e9d37a456705ce9db259bd9a8a263/install-korge-forge.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/a42b3bb1e888149b30efcfcd332f7f20a6c16975/install-korge-forge.sh)"
 ```
 
 ```bash
