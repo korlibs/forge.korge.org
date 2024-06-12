@@ -46,3 +46,4 @@ jobs:
           files: |
             build/korge-forge-installer.jar
             build/install-korge-forge.cmd
+            build/install-korge-forge.sh
