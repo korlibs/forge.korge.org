@@ -7,6 +7,7 @@ import korge.composable.Label
 import korge.tasks.*
 import java.awt.*
 import javax.imageio.*
+import javax.swing.*
 
 val installerImage by lazy {
     runCatching {
@@ -40,8 +41,12 @@ fun InstallerApp() {
                     activeTasks = it.map { TaskInfo(it.task.name, it.ratio) }
                 }
                 println()
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                JOptionPane.showMessageDialog(null, "${e.cause ?: e}", "Error", JOptionPane.ERROR_MESSAGE)
             } finally {
                 reasonToAllowFrameClosing = null
+                println("set action=null")
                 action = null
             }
         }
@@ -55,7 +60,9 @@ fun InstallerApp() {
                 color = Color.WHITE
             )
             HStack {
-                Button(if (installed) "Reinstall" else "Install", enabled = action == null) {
+                //Button("Test", enabled = action == null) { action = TestTask2 }
+                //Button(if (installed) "Reinstall" else "Install", enabled = action == null) {
+                Button("Install", enabled = action == null && !installed) {
                     println("Install pressed")
                     action = InstallKorgeForge
                 }
@@ -77,9 +84,6 @@ fun InstallerApp() {
                 }
                 //Button("Test1", enabled = action == null) {
                 //    action = TestTask1
-                //}
-                //Button("Test2", enabled = action == null) {
-                //    action = TestTask2
                 //}
             }
             for (task in activeTasks) {

@@ -29,31 +29,29 @@ class TaskContext(val task: Task, val holder: TasksHolder) {
     }
 
     suspend fun executeOnce() {
-        if (executing) {
-            completed.await()
-        } else {
+        if (!executing) {
             executing = true
             try {
-                ensureDependencies()
-                running = true
-                execute()
+                completed.completeWith(kotlin.runCatching {
+                    ensureDependencies()
+                    try {
+                        running = true
+                        withContext(Dispatchers.IO) {
+                            task.execute(this@TaskContext)
+                        }
+                    } finally {
+                        running = false
+                    }
+                })
             } finally {
-                running = false
                 executing = false
             }
         }
+        completed.await()
     }
 
     private suspend fun ensureDependencies() {
-        dependencies
-            .map { it2 -> CoroutineScope(coroutineContext).launch { it2.executeOnce() } }
-            .joinAll()
-    }
-
-    private suspend fun execute() {
-        withContext(Dispatchers.IO) {
-            completed.completeWith(kotlin.runCatching { task.execute(this@TaskContext) })
-        }
+        CoroutineScope(coroutineContext).run { dependencies.map { async { it.executeOnce() } } }.awaitAll()
     }
 }
 
@@ -77,16 +75,21 @@ object TaskExecuter {
     }) {
         println("Executing $task...")
         val tasks = TasksHolder()
-        CoroutineScope(coroutineContext).launch {
+        val job = CoroutineScope(coroutineContext + SupervisorJob()).async {
             tasks.getTaskContext(task).executeOnce()
         }
-        while (true) {
+        while (!job.isCompleted) {
             val totalTasks = tasks.getTotalTasks()
             val activeTasks = tasks.getActiveTasks()
             //val allTasks = tasks.getAllTasks()
             report(activeTasks)
             if (totalTasks > 0 && activeTasks.isEmpty()) break
             delay(100L)
+        }
+        try {
+            job.await()
+        } finally {
+            report(emptyList())
         }
     }
 }

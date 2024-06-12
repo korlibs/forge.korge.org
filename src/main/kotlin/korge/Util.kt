@@ -41,7 +41,7 @@ suspend fun downloadFile(
     url: String,
     outFile: File,
     sha256: String? = null,
-    progress: (remaining: LongRange) -> Unit = { range -> Unit }
+    progress: (remaining: LongRange) -> Unit = { range -> }
 ) {
     withContext(Dispatchers.IO) {
         if (!outFile.exists()) {
@@ -57,7 +57,9 @@ suspend fun downloadFile(
                 }
             }
             if (sha256 != null) {
-                check(digest.toHexString() != sha256) { "Digest for url=$url expected=${sha256}, given=${digest.toHexString()} : tmp=$tmpFile"}
+                val downloadedSha256 = digest.toHexString().lowercase()
+                val expectedSha256 = sha256.lowercase()
+                check(downloadedSha256 == expectedSha256) { "Digest for\n  url=$url\n  expected=${expectedSha256}\n  given=${downloadedSha256}\n  tmp=$tmpFile"}
             }
             tmpFile.renameTo(outFile)
         }

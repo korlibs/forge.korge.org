@@ -1,8 +1,10 @@
 package korge.tasks
 
 import korge.*
+import kotlinx.coroutines.*
 import java.io.*
 import kotlin.io.path.*
+import kotlin.time.Duration.Companion.seconds
 
 val KORGE_FORGE_VERSION = "2024.1"
 
@@ -27,11 +29,16 @@ object OpenInstallFolderTask : Task("Opening Install Folder for KorGE Forge") {
 
 object TestTask1 : Task("Test1") {
     override suspend fun execute(context: TaskContext) {
+        println("Test1a")
+        delay(0.25.seconds)
+        error("Error1")
+        println("Test1b")
     }
 }
 
-object TestTask2 : Task("Test2") {
+object TestTask2 : Task("Test2", TestTask1) {
     override suspend fun execute(context: TaskContext) {
+        println("Test2")
     }
 }
 
@@ -60,11 +67,21 @@ object DeleteKorgeForgeFolder : Task("Deleting KorGE Forge Folder") {
 }
 
 object DeleteDownloadArtifacts : Task("Deleting KorGE Forge Downloaded Artifacts") {
-    val enabled get() = DownloadJBR.localFile.exists()
+    val files by lazy {
+        listOf(
+            DownloadJBR.localFile,
+            DownloadForge.localFile,
+            DownloadForgeExtraLibs.localFile,
+            DownloadForgeProductInfo.localFile,
+        )
+    }
+
+    val enabled get() = files.any { it.exists() }
 
     override suspend fun execute(context: TaskContext) {
-        DownloadJBR.localFile.delete()
-        DownloadForge.localFile.delete()
+        for (file in files) {
+            file.delete()
+        }
     }
 }
 
@@ -79,7 +96,6 @@ object InstallKorgeForge : Task("Installing KorGE Forge", ExtractForge, ExtractJ
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
             OS.LINUX -> {
-
                 KorgeForgeInstallTools.KORGE_FORGE_DESKTOP.writeText("""
                     [Desktop Entry]
                     Name=KorGE Forge ${KORGE_FORGE_VERSION}
@@ -94,10 +110,13 @@ object InstallKorgeForge : Task("Installing KorGE Forge", ExtractForge, ExtractJ
                     StartupNotify=true
                 """.trimIndent())
             }
-            else -> {
+            OS.WINDOWS -> {
                 createWindowsLnk(exe, KorgeForgeInstallTools.START_MENU_LNK, ico, desc)
                 createWindowsLnk(exe, KorgeForgeInstallTools.DESKTOP_LNK, ico, desc)
             }
+            OS.OSX -> {
+            }
+            else -> Unit
         }
     }
 }
@@ -141,7 +160,7 @@ object DownloadForge : Task("Download KorGE Forge") {
     val BASE_URL = "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha"
     val baseFile = "korgeforge-241.15989.20240606.tar.zst"
     val url = "$BASE_URL/$baseFile"
-    val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E-"
+    val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E"
 
     val localFile by lazy { KorgeForgeInstallTools.getInstallerLocalFile(baseFile) }
 
@@ -159,7 +178,7 @@ object DownloadForge : Task("Download KorGE Forge") {
 object DownloadForgeExtraLibs : Task("Download KorGE Forge Extra Libs") {
     val baseFile = "korgeforge-extra-libs-241.15989.20240606.tar.zst"
     val url = "${DownloadForge.BASE_URL}/$baseFile"
-    val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E-"
+    val sha256 = "118e10e049457e28120ff6dd409f1212e9b6684962b49ab067973ddc347de127"
 
     val localFile by lazy { KorgeForgeInstallTools.getInstallerLocalFile(baseFile) }
 
@@ -177,7 +196,7 @@ object DownloadForgeExtraLibs : Task("Download KorGE Forge Extra Libs") {
 object DownloadForgeProductInfo : Task("Download KorGE Forge Product Info") {
     val baseFile = "korgeforge-mac-product-info.241.15989.20240606.json"
     val url = "${DownloadForge.BASE_URL}/$baseFile"
-    val sha256 = "CE48EE906CD06FA98B036B675F18F131B91D778171BA26AB560B0ABE2B69475E-"
+    val sha256 = "0bcd093ea0df95f49ead6c20cd8bfc28d17940590c2e4bf64ecb97e274b637c1"
 
     val localFile by lazy { KorgeForgeInstallTools.getInstallerLocalFile(baseFile) }
 
