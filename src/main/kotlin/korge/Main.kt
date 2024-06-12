@@ -6,6 +6,7 @@ import korge.tasks.*
 import kotlinx.coroutines.*
 import java.awt.*
 import javax.imageio.*
+import kotlin.system.*
 
 fun main(args: Array<String>) {
     val vargs = ArrayDeque(args.toList())
@@ -26,7 +27,7 @@ fun main(args: Array<String>) {
                 println(" --openfolder - Opens KorGE Forge installation folder")
                 println(" --gui - Show the GUI (no parameters also displays the GUI)")
                 println(" --help - Show this help")
-                System.exit(0)
+                exitProcess(0)
             }
             else -> error("Unknown command '$item'")
         }
