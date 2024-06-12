@@ -62,12 +62,14 @@ fun main(args: Array<String>) {
 }
 
 private fun setTaskbarIcon(image: Image) {
-    val taskBar = ClassLoader.getSystemClassLoader().loadClass("java.awt.Taskbar")
-    val getTaskBar = taskBar.methods.firstOrNull { it.name == "getTaskbar" }
-    val taskBarInstance = getTaskBar?.invoke(null)
-    val setIconImage = taskBar.methods.firstOrNull { it.name == "setIconImage" }
-    //println("taskBarInstance=$taskBarInstance")
-    //Taskbar.getTaskbar().iconImage = image
-    setIconImage?.invoke(taskBarInstance, image)
-    //println("method=$setIconImage")
+    if (OS.CURRENT == OS.OSX) {
+        val taskBar = ClassLoader.getSystemClassLoader().loadClass("java.awt.Taskbar")
+        val getTaskBar = taskBar.methods.firstOrNull { it.name == "getTaskbar" }
+        val taskBarInstance = getTaskBar?.invoke(null)
+        val setIconImage = taskBar.methods.firstOrNull { it.name == "setIconImage" }
+        //println("taskBarInstance=$taskBarInstance")
+        //Taskbar.getTaskbar().iconImage = image
+        setIconImage?.invoke(taskBarInstance, image)
+        //println("method=$setIconImage")
+    }
 }
