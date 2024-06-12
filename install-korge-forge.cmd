@@ -51,8 +51,8 @@ EXIT /B
 
     if not exist "%DOWNLOAD_LOCAL%" (
         echo Downloading %DOWNLOAD_URL% into: %DOWNLOAD_LOCAL_TMP%
-        curl -s -L "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%" && timeout /T 1 /NOBREAK > NUL
-        REM powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')" && timeout /T 1 /NOBREAK > NUL
+        REM curl -s -L "%DOWNLOAD_URL%" -o "%DOWNLOAD_LOCAL_TMP%" && timeout /T 1 /NOBREAK > NUL
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%DOWNLOAD_LOCAL_TMP:\=\\%')" && timeout /T 3 /NOBREAK > NUL
         REM powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-BitsTransfer -Source '%DOWNLOAD_URL%' -Destination '%DOWNLOAD_LOCAL_TMP:\=\\%'"
 
         :REPEAT_SHA1
