@@ -110,13 +110,17 @@ tasks {
         into("$buildDir")
         rename { "korge-forge-installer.jar" }
         doLast {
-            val installKorgeForgeCmd = File(projectDir, "install-korge-forge.cmd").readText()
-            val installKorgeForgeSha1 = MessageDigest.getInstance("SHA1").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
-            val newInstallKorgeForgeCmd = installKorgeForgeCmd
+            val JAR_SHA1 = MessageDigest.getInstance("SHA1").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
+            File(projectDir, "build/install-korge-forge.cmd").writeText(File(projectDir, "install-korge-forge.cmd").readText()
                 .replace(Regex("set INSTALLER_URL=(.*)"), "set INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
-                .replace(Regex("set INSTALLER_SHA1=(.*)"), "set INSTALLER_SHA1=$installKorgeForgeSha1")
+                .replace(Regex("set INSTALLER_SHA1=(.*)"), "set INSTALLER_SHA1=$JAR_SHA1")
                 .replace(Regex("set KORGE_FORGE_VERSION=(.*)"), "set KORGE_FORGE_VERSION=$projectVersion")
-            File(projectDir, "build/install-korge-forge.cmd").writeText(newInstallKorgeForgeCmd)
+            )
+            File(projectDir, "build/install-korge-forge.sh").writeText(File(projectDir, "install-korge-forge.sh").readText()
+                .replace(Regex("export FILE_URL=(.*)"), "export FILE_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
+                .replace(Regex("export EXPECTED_SHA1=(.*)"), "export EXPECTED_SHA1=${JAR_SHA1.lowercase()}")
+                .replace(Regex("export KORGE_FORGE_VERSION=(.*)"), "export KORGE_FORGE_VERSION=$projectVersion")
+            )
         }
     }
 }
