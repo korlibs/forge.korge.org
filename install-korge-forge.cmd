@@ -65,7 +65,7 @@ EXIT /B
 
             IF %SHA1_RETRIES% GEQ 0 (
                 if /i NOT "%SHA1%"=="%DOWNLOAD_SHA1%" (
-                    ECHO "File not ready, retrying in 1 second (retries %SHA1_RETRIES%) %SHA1% != %DOWNLOAD_SHA1%""
+                    ECHO "File not ready, retrying in 2 seconds (retries %SHA1_RETRIES%)"
                     TIMEOUT /T 2 /NOBREAK > NUL
                     SET /A SHA1_RETRIES-=1
                     GOTO REPEAT_SHA1
