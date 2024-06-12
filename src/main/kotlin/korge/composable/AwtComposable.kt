@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
-import kotlin.coroutines.*
+import kotlin.system.*
 
 class NodeApplier(val container: Container) : AbstractApplier<Component>(container) {
     init {
@@ -107,7 +107,10 @@ fun setComposeContent(
     root: Container,
     content: @Composable () -> Unit
 ): Composition {
-    val context = MonotonicClockImpl()
+    val context: MonotonicFrameClock = object : MonotonicFrameClock {
+        override suspend fun <R> withFrameNanos(onFrame: (Long) -> R): R =
+            onFrame(measureNanoTime { delay(16L) })
+    }
 
     val snapshotManager = GlobalSnapshotManager(Dispatchers.Main)
     snapshotManager.ensureStarted()
@@ -128,73 +131,27 @@ fun setComposeContent(
 }
 
 class GlobalSnapshotManager(val dispatcher: CoroutineDispatcher) {
-    private var started = false
     private var commitPending = false
     private var removeWriteObserver: (ObserverHandle)? = null
 
     private val scheduleScope = CoroutineScope(dispatcher + SupervisorJob())
 
     fun ensureStarted() {
-        if (!started) {
-            started = true
-            removeWriteObserver = Snapshot.registerGlobalWriteObserver(globalWriteObserver)
-        }
-    }
-
-    private val globalWriteObserver: (Any) -> Unit = {
-        // Race, but we don't care too much if we end up with multiple calls scheduled.
-        if (!commitPending) {
-            commitPending = true
-            schedule {
-                commitPending = false
-                Snapshot.sendApplyNotifications()
+        if (removeWriteObserver != null) return
+        removeWriteObserver = Snapshot.registerGlobalWriteObserver {
+            // Race, but we don't care too much if we end up with multiple calls scheduled.
+            if (!commitPending) {
+                commitPending = true
+                schedule {
+                    commitPending = false
+                    Snapshot.sendApplyNotifications()
+                }
             }
         }
     }
 
-    /**
-     * List of deferred callbacks to run serially. Guarded by its own monitor lock.
-     */
-    private val scheduledCallbacks = mutableListOf<() -> Unit>()
-
-    /**
-     * Guarded by [scheduledCallbacks]'s monitor lock.
-     */
-    private var isSynchronizeScheduled = false
-
-    /**
-     * Synchronously executes any outstanding callbacks and brings snapshots into a
-     * consistent, updated state.
-     */
-    private fun synchronize() {
-        val callbacks = scheduledCallbacks.toList()
-        scheduledCallbacks.clear()
-        callbacks.forEach { it.invoke() }
-        isSynchronizeScheduled = false
-    }
-
     private fun schedule(block: () -> Unit) {
-        scheduledCallbacks.add(block)
-        if (!isSynchronizeScheduled) {
-            isSynchronizeScheduled = true
-            scheduleScope.launch { synchronize() }
-        }
-    }
-}
-
-class MonotonicClockImpl() : MonotonicFrameClock {
-    override suspend fun <R> withFrameNanos(
-        onFrame: (Long) -> R
-    ): R {
-        //println("MonotonicClockImpl.withFrameNanos")
-
-        return suspendCoroutine { continuation ->
-            val start = System.nanoTime()
-            Timer(16) {
-                val now = System.nanoTime()
-                continuation.resume(onFrame(now - start))
-            }.also { it.isRepeats = false }.start()
-        }
+        scheduleScope.launch { block() }
     }
 }
 
