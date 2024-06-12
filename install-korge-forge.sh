@@ -1,8 +1,8 @@
 #!/bin/sh
 
-export KORGE_FORGE_VERSION=v0.0.2
-export FILE_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v0.0.2/korge-forge-installer.jar
-export EXPECTED_SHA1=2bfcc019ccfde3eb432626e4e6cf34e95239e787
+export KORGE_FORGE_VERSION=v0.1.0
+export FILE_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$KORGE_FORGE_VERSION/korge-forge-installer.jar
+export EXPECTED_SHA1=16af352f759aa511cd4607e1974e1acc315bc8b6
 export FILE_NAME=~/.local/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
 if [ "$(uname -s)" = 'Darwin' ]; then

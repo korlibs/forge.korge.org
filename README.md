@@ -16,7 +16,7 @@ curl -s -L https://github.com/korlibs/korge-forge-installer/releases/download/v0
 powershell -NoProfile -ExecutionPolicy Bypass -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/korlibs/korge-forge-installer/releases/download/v0.0.1/install-korge-forge.cmd', '%APPDATA:\=\\%\\install-korge-forge.cmd')" && "%APPDATA%\install-korge-forge.cmd"
 ```
 
-## LINUX
+## LINUX / MAC
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/a42b3bb1e888149b30efcfcd332f7f20a6c16975/install-korge-forge.sh)"
