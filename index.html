@@ -93,28 +93,34 @@
 <div class="container-fluid">
 
     <h2>Installing</h2>
-    <div class="">
-        <ul class="nav nav-tabs" id="osTabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link" id="windows-tab" data-toggle="tab" href="#windows" role="tab"
-                   aria-controls="windows" aria-selected="false">Windows</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="unix-tab" data-toggle="tab" href="#unix" role="tab" aria-controls="linux"
-                   aria-selected="false">Mac / Linux</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="osTabsContent">
-            <div class="tab-pane show active" style="padding:8px;" id="universal" role="tabpanel"
-                 aria-labelledby="universal-tab">
-                <a class="btn btn-primary"
-                   href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
-                    Download JAR installer (Java required)
-                </a>
-            </div>
-            <div class="tab-pane show" style="padding:8px;" id="windows" role="tabpanel" aria-labelledby="windows-tab">
-                <div>
-                    <a class="btn btn-primary" href="https://forge.korge.org/install-korge-forge.cmd" onclick="
+    <div>
+        <div class="card" style="margin:0;">
+            <div class="card-body" style="background:#eee;">
+                <div class="">
+                    <ul class="nav nav-tabs" id="osTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="windows-tab" data-toggle="tab" href="#windows" role="tab"
+                               aria-controls="windows" aria-selected="false">Windows</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="unix-tab" data-toggle="tab" href="#unix" role="tab"
+                               aria-controls="linux"
+                               aria-selected="false">Mac / Linux</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="osTabsContent">
+                        <div class="tab-pane show active" style="padding:8px;" id="universal" role="tabpanel"
+                             aria-labelledby="universal-tab">
+                            <a class="btn btn-primary"
+                               href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
+                                Download JAR installer (Java required)
+                            </a>
+                        </div>
+                        <div class="tab-pane show" style="padding:8px;" id="windows" role="tabpanel"
+                             aria-labelledby="windows-tab">
+                            <div>
+                                <a class="btn btn-primary" href="https://forge.korge.org/install-korge-forge.cmd"
+                                   onclick="
         const e = this;
 
         var saveBlob = (function () {
@@ -136,43 +142,47 @@
         })();
         return false
       ">Download Windows 10/11 Installer</a>
+                            </div>
+                            <div style="margin:6px 0;">-or-</div>
+                            <figure class="codeblock">
+                                <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
+                                    <span class="codeblock-lang">Windows&nbsp;CMD&nbsp;Install&nbsp;Script</span>
+                                    <button
+                                            type="button" class="btn btn-sm btn-secondary" data-show="true"
+                                            data-target="#cmd-script"
+                                            onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
+                                    >Copy Code
+                                    </button>
+                                </figcaption>
+                                <pre id="cmd-script" class="language-bash" style="padding:8px;color:white;"><code
+                                        class="language-bash">curl -s -L https://forge.korge.org/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"</code></pre>
+                            </figure>
+                        </div>
+                        <div class="tab-pane" style="padding:8px;" id="unix" role="tabpanel"
+                             aria-labelledby="linux-tab">
+                            <div>
+                                <a class="btn btn-primary"
+                                   href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
+                                    Download JAR installer (Java required)
+                                </a>
+                            </div>
+                            <div style="margin:6px 0;">-or-</div>
+                            <figure class="codeblock">
+                                <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
+                                    <span class="codeblock-lang">Mac/Linux&nbsp;SH&nbsp;Install&nbsp;Script</span>
+                                    <button
+                                            type="button" class="btn btn-sm btn-secondary" data-show="true"
+                                            data-target="#bash-script"
+                                            onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
+                                    >Copy Code
+                                    </button>
+                                </figcaption>
+                                <pre id="bash-script" class="language-bash" style="padding:8px;color:white;"><code
+                                        class="language-bash">sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</code></pre>
+                            </figure>
+                        </div>
+                    </div>
                 </div>
-                <div style="margin:6px 0;">-or-</div>
-                <figure class="codeblock">
-                    <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
-                        <span class="codeblock-lang">Windows&nbsp;CMD&nbsp;Install&nbsp;Script</span>
-                        <button
-                                type="button" class="btn btn-sm btn-secondary" data-show="true"
-                                data-target="#cmd-script"
-                                onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
-                        >Copy Code
-                        </button>
-                    </figcaption>
-                    <pre id="cmd-script" class="language-bash" style="padding:8px;color:white;"><code
-                            class="language-bash">curl -s -L https://forge.korge.org/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"</code></pre>
-                </figure>
-            </div>
-            <div class="tab-pane" style="padding:8px;" id="unix" role="tabpanel" aria-labelledby="linux-tab">
-                <div>
-                    <a class="btn btn-primary"
-                       href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
-                        Download JAR installer (Java required)
-                    </a>
-                </div>
-                <div style="margin:6px 0;">-or-</div>
-                <figure class="codeblock">
-                    <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
-                        <span class="codeblock-lang">Mac/Linux&nbsp;SH&nbsp;Install&nbsp;Script</span>
-                        <button
-                                type="button" class="btn btn-sm btn-secondary" data-show="true"
-                                data-target="#bash-script"
-                                onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
-                        >Copy Code
-                        </button>
-                    </figcaption>
-                    <pre id="bash-script" class="language-bash" style="padding:8px;color:white;"><code
-                            class="language-bash">sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</code></pre>
-                </figure>
             </div>
         </div>
     </div>
