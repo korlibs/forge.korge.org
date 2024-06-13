@@ -1,63 +1,114 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>KorGE Forge</title>
-  <link rel="stylesheet" href="bootstrap.min.css" crossorigin="anonymous">
-  <script src="bootstrap.bundle.min.js"></script>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KorGE Forge</title>
+    <link rel="stylesheet" href="bootstrap.min.css" crossorigin="anonymous">
+    <script src="jquery-3.2.1.slim.min.js"></script>
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <style>
 
-    pre>code,pre {
-        background: #272935
-    }
+        pre>code,pre {
+            background: #272935
+        }
 
-    .codeblock figcaption {
-        display: grid;
-        width: 100%;
-        padding: 0;
-        min-height: 2.25rem;
-        background-color: #2b2e3b;
-        border-radius: 8px 8px 0 0;
-        border: 1px solid var(--codeblock-border-color);
-        font-family: var(--font-family);
-        grid-template-columns: min-content 1fr
-    }
+        .codeblock figcaption {
+            display: grid;
+            width: 100%;
+            padding: 0;
+            background-color: #2b2e3b;
+            border-radius: 8px 8px 0 0;
+            grid-template-columns: min-content 1fr
+        }
 
-    .codeblock figcaption span {
-        padding-inline:var(--spacing-s);padding-block-start: .2rem;
-        font-weight: var(--fw-bold);
-        font-size: var(--font-size-m);
-        align-self: center
-    }
+        .codeblock figcaption span {
+            padding-block-start: .2rem;
+            align-self: center;
+            font-size: 0.75em;
+            color: #777;
+        }
 
-    .codeblock figcaption button {
-        align-self: end;
-        padding: .5rem;
-        border: none;
-        border: 1px solid var(--color-border);
-        border-radius: 8px;
-        margin: .4rem .5em;
-        color: var(--color-text);
-        font-weight: var(--fw-bold);
-        cursor: pointer;
-        justify-self: end
-    }
+        .codeblock figcaption button {
+            align-self: end;
+            border: none;
+            border-radius: 8px;
+            margin: .4rem .5em;
+            font-size: .5em;
+            cursor: pointer;
+            justify-self: end;
+            color: #aaa;
+        }
 
-    .codeblock pre {
-        margin: 0;
-    }
-    .codeblock code {
-      padding: 4px;
-    }
-  </style>
+        .codeblock pre {
+            margin: 0;
+        }
+        .codeblock code {
+          padding: 4px;
+        }
+    </style>
+    <script>
+        function getOS() {
+            var userAgent = window.navigator.userAgent,
+                platform = window.navigator.platform,
+                macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+                windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+                iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+                os = null;
+
+            if (macosPlatforms.indexOf(platform) !== -1) {
+                os = 'Mac';
+            } else if (iosPlatforms.indexOf(platform) !== -1) {
+                os = 'iOS';
+            } else if (windowsPlatforms.indexOf(platform) !== -1) {
+                os = 'Windows';
+            } else if (/Android/.test(userAgent)) {
+                os = 'Android';
+            } else if (!os && /Linux/.test(platform)) {
+                os = 'Linux';
+            }
+
+            return os;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var os = getOS();
+            if (os === 'Windows') {
+                $('#windows-tab').tab('show');
+            } else if (os === 'Linux' || os === 'Mac') {
+                $('#unix-tab').tab('show');
+            }
+        });
+    </script>
 </head>
 <body style="">
 <div class="container-fluid">
 
-  <img src="src/main/resources/korge-forge-installer-bg.jpg" style="max-width:100vw;" />
-  <h2>Installing</h2>
-  <div>
-    <h4>Windows 10 Script</h4>
-    <div style="margin-bottom:6px;">
-      <a class="btn btn-primary" href="https://forge.korge.org/install-korge-forge.cmd" onclick="
+    <img src="src/main/resources/korge-forge-installer-bg.jpg" style="max-width:100vw;"/>
+    <h2>Installing</h2>
+    <div class="">
+        <ul class="nav nav-tabs" id="osTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="windows-tab" data-toggle="tab" href="#windows" role="tab"
+                   aria-controls="windows" aria-selected="false">Windows</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="unix-tab" data-toggle="tab" href="#unix" role="tab" aria-controls="linux"
+                   aria-selected="false">Mac / Linux</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="osTabsContent">
+            <div class="tab-pane show active" style="padding:8px;" id="universal" role="tabpanel"
+                 aria-labelledby="universal-tab">
+                <a class="btn btn-primary"
+                   href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
+                    JAR installer (Java required)
+                </a>
+            </div>
+            <div class="tab-pane show" style="padding:8px;" id="windows" role="tabpanel" aria-labelledby="windows-tab">
+                <div style="margin-bottom:6px;">
+                    <a class="btn btn-primary" href="https://forge.korge.org/install-korge-forge.cmd" onclick="
         const e = this;
 
         var saveBlob = (function () {
@@ -79,92 +130,101 @@
         })();
         return false
       ">Download Windows 10/11 Installer</a>
+                </div>
+                <div>-or-</div>
+                <figure class="codeblock">
+                    <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
+                        <span class="codeblock-lang">Windows&nbsp;CMD&nbsp;Install&nbsp;Script</span>
+                        <button
+                                type="button" class="btn btn-sm btn-secondary" data-show="true"
+                                data-target="#cmd-script"
+                                onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
+                        >Copy Code
+                        </button>
+                    </figcaption>
+                    <pre id="cmd-script" class="language-bash" style="padding:8px;color:white;"><code
+                            class="language-bash">curl -s -L https://forge.korge.org/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"</code></pre>
+                </figure>
+            </div>
+            <div class="tab-pane" style="padding:8px;" id="unix" role="tabpanel" aria-labelledby="linux-tab">
+                <div style="margin-bottom:6px;">
+                    <a class="btn btn-primary"
+                       href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
+                        JAR installer (Java required)
+                    </a>
+                </div>
+                <div>-or-</div>
+                <figure class="codeblock">
+                    <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
+                        <span class="codeblock-lang">Mac/Linux&nbsp;SH&nbsp;Install&nbsp;Script</span>
+                        <button
+                                type="button" class="btn btn-sm btn-secondary" data-show="true"
+                                data-target="#bash-script"
+                                onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
+                        >Copy Code
+                        </button>
+                    </figcaption>
+                    <pre id="bash-script" class="language-bash" style="padding:8px;color:white;"><code
+                            class="language-bash">sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</code></pre>
+                </figure>
+            </div>
+        </div>
     </div>
-    <div>-or-</div>
-    <figure class="codeblock">
-      <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
-        <span class="codeblock-lang" style="color:white;">Windows&nbsp;CMD&nbsp;Install&nbsp;Script</span>
-        <button
-          type="button" class="btn btn-sm btn-secondary" data-show="true" data-target="#cmd-script"
-          onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
-        >Copy Code</button>
-      </figcaption>
-      <pre id="cmd-script" class="language-bash" style="padding:8px;color:white;"><code class="language-bash">curl -s -L https://forge.korge.org/install-korge-forge.cmd -o "%APPDATA%\install-korge-forge.cmd" && "%APPDATA%\install-korge-forge.cmd"</code></pre>
-    </figure>
-  </div>
-  <div>
-    <h4>Linux/Mac Script</h4>
-    <div style="margin-bottom:6px;">
-      <a class="btn btn-primary" href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar">
-        JAR installer (Java required)
-      </a>
-    </div>
-    <div>-or-</div>
-    <figure class="codeblock">
-      <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
-        <span class="codeblock-lang" style="color:white;">Mac/Linux&nbsp;SH&nbsp;Install&nbsp;Script</span>
-        <button
-                type="button" class="btn btn-sm btn-secondary" data-show="true" data-target="#bash-script"
-                onclick="const it = document.querySelector(this.dataset.target); navigator.clipboard.writeText(it.innerText); document.createRange().selectNode(it);"
-        >Copy Code</button>
-      </figcaption>
-      <pre id="bash-script" class="language-bash" style="padding:8px;color:white;"><code class="language-bash">sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</code></pre>
-    </figure>
-  </div>
-  <h2>FAQ</h2>
-  <dl>
-    <dt>Why a separate IDE?</dt>
-    <dd>
-      <p>
-      The main reason is Stability, Consistency and Focus.
-      The KorGE plugin forced us to keep up-to-date with IntelliJ version changes.
-      Sometimes we were not ready. That includes: Gradle, Android plugin,
-      OpenGL to Metal migration that caused crashes, deprecations,
-      IDE errors on functionality changes
-      among other things.
-      </p>
-      <p>
-      With a full separate IDE we have full control on when we update and ensure
-      everything continue working as expected.
-      </p>
-      <p>
-      While plugins can add stuff, they cannot remove stuff.
-      With a full IDE we can reduce clutter and focus on what's important for KorGE
-      improving the developer and artist workflows.
-      </p>
-    </dd>
-    <dt>Will be the IntelliJ Plugin be supported?</dt>
-    <dd>
-      <p>
-      Existing versions will be supported. Updating it will be low priority, but might be done if reasonable.
-      Full support for the features we want to add to it, for example editor in Mac,
-      will require starting the process with OpenGL support for the time being,
-      that requires KorGE Forge.
-      </p>
-    </dd>
-    <dt>Which features can we expect?</dt>
-    <dd>
-      <p>
-      The ones we had in the plugin, plus a new resource explorer.
-      Eventually we will include a split panel full visual editor, previewer with hot reloading.
-      </p>
-    </dd>
-    <dt>Can I install it silently?</dt>
-    <dd>
-      <p>
-      KorGE Forge Installer can be run from CLI. You can append `--help` to it.
-      It supports installing, uninstalling, opening the program or the installation folder
-      later, etc.
-      </p>
-    </dd>
-    <dt>Is there an offline installer?</dt>
-    <dd>
-      <p>
-      KorGE Forge Installer downloads required artifacts in the same folder where the script
-      is run when the files are not there. You can install it, and then keep the downloaded artifacts, zip them and distribute.
-      </p>
-    </dd>
-  </dl>
+    <h2>FAQ</h2>
+    <dl>
+        <dt>Why a separate IDE?</dt>
+        <dd>
+            <p>
+                The main reason is Stability, Consistency and Focus.
+                The KorGE plugin forced us to keep up-to-date with IntelliJ version changes.
+                Sometimes we were not ready. That includes: Gradle, Android plugin,
+                OpenGL to Metal migration that caused crashes, deprecations,
+                IDE errors on functionality changes
+                among other things.
+            </p>
+            <p>
+                With a full separate IDE we have full control on when we update and ensure
+                everything continue working as expected.
+            </p>
+            <p>
+                While plugins can add stuff, they cannot remove stuff.
+                With a full IDE we can reduce clutter and focus on what's important for KorGE
+                improving the developer and artist workflows.
+            </p>
+        </dd>
+        <dt>Will be the IntelliJ Plugin be supported?</dt>
+        <dd>
+            <p>
+                Existing versions will be supported. Updating it will be low priority, but might be done if reasonable.
+                Full support for the features we want to add to it, for example editor in Mac,
+                will require starting the process with OpenGL support for the time being,
+                that requires KorGE Forge.
+            </p>
+        </dd>
+        <dt>Which features can we expect?</dt>
+        <dd>
+            <p>
+                The ones we had in the plugin, plus a new resource explorer.
+                Eventually we will include a split panel full visual editor, previewer with hot reloading.
+            </p>
+        </dd>
+        <dt>Can I install it silently?</dt>
+        <dd>
+            <p>
+                KorGE Forge Installer can be run from CLI. You can append `--help` to it.
+                It supports installing, uninstalling, opening the program or the installation folder
+                later, etc.
+            </p>
+        </dd>
+        <dt>Is there an offline installer?</dt>
+        <dd>
+            <p>
+                KorGE Forge Installer downloads required artifacts in the same folder where the script
+                is run when the files are not there. You can install it, and then keep the downloaded artifacts, zip
+                them and distribute.
+            </p>
+        </dd>
+    </dl>
 </div>
 </body>
 </html>
