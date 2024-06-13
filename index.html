@@ -1,4 +1,5 @@
 <html>
+  <h2>Installing</h2>
   <div>
     <div>Windows 10 Script</div>
     <div>
@@ -38,4 +39,42 @@
       <pre>sh -c "$(curl -fsSL https://raw.githubusercontent.com/korlibs/korge-forge-installer/main/install-korge-forge.sh)"</pre>
     </code>
   </div>
+  <h2>FAQ</h2>
+  <dl>
+    <dt>Why a separate IDE?</dt>
+    <dd>
+      The main reason is Stability, Consistency and Focus.
+      The KorGE plugin forced us to keep up-to-date with IntelliJ version changes.
+      Sometimes we were not ready. That includes: Gradle, Android plugin,
+      OpenGL to Metal migration that caused crashes among other things.
+      With a full separate IDE we have full control on when we update and ensure
+      everything continue working as expected.
+      While plugins can add stuff, they cannot remove stuff.
+      With a full IDE we can reduce clutter and focus on what's important for KorGE
+      improving the developer and artist workflows.
+    </dd>
+    <dt>Will be the IntelliJ Plugin be supported?</dt>
+    <dd>
+      Existing versions will be supported. Updating it will be low priority, but might be done if reasonable.
+      Full support for the features we want to add to it, for example editor in Mac,
+      will require starting the process with OpenGL support for the time being,
+      that requires KorGE Forge.
+    </dd>
+    <dt>Which features can we expect?</dt>
+    <dd>
+      The ones we had in the plugin, plus a new resource explorer.
+      Eventually we will include a split panel full visual editor, previewer with hot reloading.
+    </dd>
+    <dt>Can I install it silently?</dt>
+    <dd>
+      KorGE Forge Installer can be run from CLI. You can append `--help` to it.
+      It supports installing, uninstalling, opening the program or the installation folder
+      later, etc.
+    </dd>
+    <dt>Is there an offline installer?</dt>
+    <dd>
+      KorGE Forge Installer downloads required artifacts in the same folder where the script
+      is run when the files are not there. You can install it, and then keep the downloaded artifacts, zip them and distribute.
+    </dd>
+  </dl>
 </html>
