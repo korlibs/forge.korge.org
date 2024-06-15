@@ -120,6 +120,17 @@ tasks {
             File(projectDir, "build/install-korge-forge.sh").writeText(File(projectDir, "install-korge-forge.sh").readText().replaceScriptStrings())
         }
     }
+
+    val unzipTcc by creating(Copy::class) {
+        from(zipTree("tcc-0.9.27-win64-bin.zip"))
+        into("build/tcc")
+        //rename { it.removePrefix("tcc/") }
+    }
+
+    val createExe by creating(Exec::class) {
+        dependsOn(unzipTcc)
+        commandLine("wine64", "build/tcc/tcc/tcc.exe", "korge-forge-installer.c", "icons.res", "-o", "build/korge-forge-installer.exe")
+    }
 }
 
 //launch4j {

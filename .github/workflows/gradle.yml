@@ -28,6 +28,17 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Install Wine
+      run: |
+        sudo dpkg --add-architecture i386
+        curl -fsSL  https://dl.winehq.org/wine-builds/Release.key | sudo apt-key add -
+        sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+        sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+        sudo apt-get update        
+        sudo apt-get install -y --install-recommends winehq-stable
+        sudo apt-get install -y winetricks
+        sudo apt-get install -y winbind
+
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
@@ -36,8 +47,11 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
-    - name: Build with Gradle Wrapper
+    - name: Gradle createInstallerJar
       run: ./gradlew createInstallerJar
+
+    - name: Gradle createExe
+      run: ./gradlew createExe
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
