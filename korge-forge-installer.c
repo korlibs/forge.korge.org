@@ -105,8 +105,8 @@ int main(int argc, const char *argv[]) {
 
     system("mkdir korge-forge-installer 2> NUL");
     downloadFileIfNotExists("https://github.com/korlibs/forge.korge.org/releases/download/v0.1.1/korge-forge-installer.jar", "korge-forge-installer\\korge-forge-installer.jar", "8b29794bbc14e50f7c4d9c4b673aabbbdcf6cfd1");
-    downloadFileIfNotExists("https://github.com/korlibs/universal-jre/releases/download/0.0.1/OpenJDK21U-jre_x64_windows_hotspot_21.0.3_9.zip", "korge-forge-installer\\korge-forge-installer-jre.zip", "0a36d67c443387bab59e335b8a073d7d0f3a9575");
     if (!file_exists("korge-forge-installer/jdk-21.0.3+9-jre/bin/java.exe")) {
+        downloadFileIfNotExists("https://github.com/korlibs/universal-jre/releases/download/0.0.1/OpenJDK21U-jre_x64_windows_hotspot_21.0.3_9.zip", "korge-forge-installer\\korge-forge-installer-jre.zip", "0a36d67c443387bab59e335b8a073d7d0f3a9575");
         printf("Unzipping JRE...\n");
         system("tar -xzf korge-forge-installer\\korge-forge-installer-jre.zip -C korge-forge-installer");
     }
