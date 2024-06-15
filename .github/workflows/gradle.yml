@@ -28,16 +28,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Install Wine
+    - name: Set up Wine environment
       run: |
         sudo dpkg --add-architecture i386
-        curl -fsSL  https://dl.winehq.org/wine-builds/Release.key | sudo apt-key add -
-        sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
-        sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
-        sudo apt-get update        
-        sudo apt-get install -y --install-recommends winehq-stable
-        sudo apt-get install -y winetricks
-        sudo apt-get install -y winbind
+        sudo mkdir -pm755 /etc/apt/keyrings
+        sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+        sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources
+        sudo apt-get update
+        sudo apt-get install --install-recommends winehq-stable
+        wine --version
 
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
