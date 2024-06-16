@@ -3,9 +3,14 @@
 export KORGE_FORGE_VERSION=v0.1.1
 echo KorGE Forge Installer $KORGE_FORGE_VERSION
 
+#export INSTALLER_PATH=$HOME/.local
+export INSTALLER_PATH=./korge-forge-installer
+
 export INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$KORGE_FORGE_VERSION/korge-forge-installer.jar
 export INSTALLER_SHA1=8b29794bbc14e50f7c4d9c4b673aabbbdcf6cfd1
-export INSTALLER_LOCAL=$HOME/.local/korge-forge-installer-$KORGE_FORGE_VERSION.jar
+export INSTALLER_LOCAL=$INSTALLER_PATH/korge-forge-installer-$KORGE_FORGE_VERSION.jar
+
+echo Working directory... "$(realpath "$INSTALLER_PATH")"
 
 if [ "$(uname -s)" = 'Darwin' ]; then
   export sha1sum=shasum
@@ -13,7 +18,7 @@ else
   export sha1sum=sha1sum
 fi
 
-mkdir -p ~/.local > /dev/null
+mkdir -p $INSTALLER_PATH > /dev/null
 
 download_file()
 {
@@ -24,7 +29,7 @@ download_file()
 
   # Download the file if it doesn't exist
   if [ ! -f "$FILE_NAME" ]; then
-    echo "File not found. Downloading... $FILE_URL"
+    echo "Downloading... $FILE_URL"
     curl -s -L "$FILE_URL" -o "$FILE_NAME.tmp"
     if [ $? -ne 0 ]; then
       echo "Failed to download the file."
@@ -44,21 +49,22 @@ download_file()
 
     mv "$FILE_NAME.tmp" "$FILE_NAME"
 
-    echo "File verification succeeded."
+    # echo "File verification succeeded."
   fi
 }
 
 download_file "$INSTALLER_URL" "$INSTALLER_LOCAL" "$INSTALLER_SHA1"
 if [ "$(uname -s)" = 'Darwin' ]; then
-  export java=$HOME/.local/jdk-21+35-jre/Contents/jre/bin/java
-  export LOCAL_JRE_ZIP=$HOME/.local/macos-universal-jdk-21+35-jre.tar.gz
-  download_file "https://github.com/korlibs/universal-jre/releases/download/0.0.1/macos-universal-jdk-21+35-jre.tar.gz" "$LOCAL_JRE_ZIP" "5bfa5a0ba39852ce5151012d9e1cc3c6ce96f317"
+  export java=$INSTALLER_PATH/jdk-21+35-jre/Contents/jre/bin/java
   if [ ! -f "$java" ]; then
+    export LOCAL_JRE_ZIP=$INSTALLER_PATH/macos-universal-jdk-21+35-jre.tar.gz
+    download_file "https://github.com/korlibs/universal-jre/releases/download/0.0.1/macos-universal-jdk-21+35-jre.tar.gz" "$LOCAL_JRE_ZIP" "5bfa5a0ba39852ce5151012d9e1cc3c6ce96f317"
     echo Extracting JRE...
-    tar -xzf "$LOCAL_JRE_ZIP" -C "$HOME/.local"
+    tar -xzf "$LOCAL_JRE_ZIP" -C "$INSTALLER_PATH"
+    rm $LOCAL_JRE_ZIP
   fi
 else
   export java=java
 fi
 
-"$java" -jar "$INSTALLER_LOCAL" $*
+cd $INSTALLER_PATH && "../$java" -jar "../$INSTALLER_LOCAL" "$@"; cd ..
