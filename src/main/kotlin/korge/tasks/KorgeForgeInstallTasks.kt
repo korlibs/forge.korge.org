@@ -227,7 +227,7 @@ object KorgeForgeInstallTools {
         else -> "${System.getenv("APPDATA")}\\Microsoft\\Windows\\Start Menu"
     }
     val START_MENU_LNK = File(START_MENU, "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
-    val DESKTOP_LNK = File(File(System.getenv("USERPROFILE"), "Desktop"), "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
+    val DESKTOP_LNK = File(getDesktopFolder(), "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
     val KORGE_FORGE_DESKTOP = File(START_MENU, "korge-forge-${KORGE_FORGE_VERSION}.desktop")
 
     fun isInstalled(): Boolean = VersionFolder.isDirectory
@@ -351,4 +351,20 @@ fun createWindowsLnk(exe: File, lnk: File, ico: File, description: String) {
     ).inheritIO().start().waitFor()
 
     //powershell -NoProfile -ExecutionPolicy Bypass -File create_shortcut.ps1 -targetPath demo.exe -shortcutPath demo.lnk -description "hello" -iconPath = "demo.ico"
+}
+
+fun getDesktopFolder(): File = when (OS.CURRENT) {
+    OS.WINDOWS -> {
+        val tryPath = runCatching {
+            ProcessBuilder(
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "/c", "[Environment]::GetFolderPath('Desktop')",
+            ).inheritIO().start().also { it.waitFor() }.inputStream.bufferedReader().readText().takeIf { it.isNotBlank() }
+        }.getOrNull()
+        tryPath?.let { File(it) }?.takeIf { it.isDirectory } ?: File(System.getenv("USERPROFILE"), "Desktop")
+    }
+    OS.OSX -> File(System.getProperty("user.home"), "Desktop")
+    OS.LINUX -> File(System.getProperty("user.home"), "Desktop")
 }
