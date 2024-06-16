@@ -4,8 +4,10 @@ SETLOCAL EnableDelayedExpansion
 SET KORGE_FORGE_VERSION=v0.1.1
 ECHO KorGE Forge Installer %KORGE_FORGE_VERSION%
 
+CALL :NORMALIZEPATH .\korge-forge-installer
+
 REM SET INSTALLER_PATH=%LOCALAPPDATA%\KorgeForgeInstaller
-SET INSTALLER_PATH=.\korge-forge-installer
+SET INSTALLER_PATH=%RETVAL%
 
 SET INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/%KORGE_FORGE_VERSION%/korge-forge-installer.jar
 SET INSTALLER_SHA1=8b29794bbc14e50f7c4d9c4b673aabbbdcf6cfd1
@@ -20,7 +22,7 @@ SET JRE_JAVA_BIN=%INSTALLER_PATH%\jdk-21.0.3+9-jre\bin
 
 REM https://github.com/adoptium/temurin21-binaries/releases
 
-ECHO "Temporary files at: %INSTALLER_PATH%"
+ECHO Temporary files at: %INSTALLER_PATH%
 
 MKDIR "%INSTALLER_PATH%" 2> NUL
 
@@ -42,7 +44,7 @@ IF NOT EXIST "%JRE_JAVA_BIN%" (
 )
 
 CD %INSTALLER_PATH%
-"..\%JRE_JAVA_BIN%\java" -jar "..\%INSTALLER_LOCAL%" %*
+"%JRE_JAVA_BIN%\java" -jar "%INSTALLER_LOCAL%" %*
 CD ..
 
 EXIT /B
@@ -63,14 +65,14 @@ EXIT /B
 
         IF NOT "%DOWNLOAD_SHA1%"=="" (
             :REPEAT_SHA1
-            ECHO Computing hash...
+            REM ECHO Computing hash...
             FOR /f %%i IN (
                 'powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Filehash -Path '%DOWNLOAD_LOCAL_TMP:\=\\%' -Algorithm SHA1).Hash"'
             ) DO SET SHA1=%%i
 
             IF NOT "%SHA1_RETRIES%"=="0" (
                 IF /i NOT "%SHA1%"=="%DOWNLOAD_SHA1%" (
-                    ECHO "File not ready, retrying in 2 seconds (retries %SHA1_RETRIES%) %DOWNLOAD_LOCAL_TMP:\=\\%"
+                    REM ECHO "File not ready, retrying in 2 seconds (retries %SHA1_RETRIES%) %DOWNLOAD_LOCAL_TMP:\=\\%"
                     TIMEOUT /T 2 /NOBREAK > NUL
                     SET /A SHA1_RETRIES-=1
                     GOTO :REPEAT_SHA1
@@ -87,6 +89,10 @@ EXIT /B
         )
 
         MOVE "%DOWNLOAD_LOCAL_TMP%" "%DOWNLOAD_LOCAL%" 2> NUL > NUL
-        ECHO Ok
+        REM ECHO Ok
     )
+EXIT /B
+
+:NORMALIZEPATH
+  SET RETVAL=%~f1
 EXIT /B
