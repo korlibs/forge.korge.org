@@ -3,14 +3,16 @@
 export KORGE_FORGE_VERSION=v0.1.1
 echo KorGE Forge Installer $KORGE_FORGE_VERSION
 
+export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
 #export INSTALLER_PATH=$HOME/.local
-export INSTALLER_PATH=./korge-forge-installer
+export INSTALLER_PATH=$SCRIPT_DIR/korge-forge-installer
 
 export INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$KORGE_FORGE_VERSION/korge-forge-installer.jar
 export INSTALLER_SHA1=8b29794bbc14e50f7c4d9c4b673aabbbdcf6cfd1
 export INSTALLER_LOCAL=$INSTALLER_PATH/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
-echo Working directory... "$(realpath "$INSTALLER_PATH")"
+echo Working directory... "$INSTALLER_PATH"
 
 if [ "$(uname -s)" = 'Darwin' ]; then
   export sha1sum=shasum
@@ -18,7 +20,7 @@ else
   export sha1sum=sha1sum
 fi
 
-mkdir -p $INSTALLER_PATH > /dev/null
+mkdir -p "$INSTALLER_PATH" > /dev/null
 
 download_file()
 {
@@ -67,4 +69,4 @@ else
   export java=java
 fi
 
-cd $INSTALLER_PATH && "../$java" -jar "../$INSTALLER_LOCAL" "$@"; cd ..
+cd $INSTALLER_PATH && "$java" -jar "$INSTALLER_LOCAL" "$@"; cd ..
