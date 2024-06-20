@@ -13,7 +13,7 @@ object PatchKorgeClassPath {
         for (entry in classPaths.entries) {
             if (entry.name == "KorgePlugin") {
                 for (jar in entry.jars) {
-                    ZipFile(File(classPathFile.parentFile, jar)).use {
+                    ZipFile(File(classPathFile.parentFile, "${entry.name}/$jar")).use {
                         val pluginXml: ZipEntry? = it.getEntry("META-INF/plugin.xml")
                         if (pluginXml != null) {
                             val pluginXmlBytes = it.getInputStream(pluginXml).use { it.readBytes() }

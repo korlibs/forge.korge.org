@@ -85,6 +85,7 @@ suspend fun downloadFile(
                 check(downloadedSha256 == expectedSha256) { "Digest for\n  url=$url\n  expected=${expectedSha256}\n  given=${downloadedSha256}\n  tmp=$tmpFile"}
             }
             tmpFile.renameTo(outFile)
+            println("DOWNLOADED $outFile from $url")
         }
     }
 }
