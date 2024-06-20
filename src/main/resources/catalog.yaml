@@ -33,8 +33,7 @@ actions:
     - download.macos: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-mac-product-info.241.15989.20240606.json::0bcd093ea0df95f49ead6c20cd8bfc28d17940590c2e4bf64ecb97e274b637c1"
       copy: $out/Resources/product-info.json
   forge_610:
-    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korge-forge-plugin-6.1.0.jar::311423a9eb01b9161f975f33012811aa355eac1c0f4ae705d61260a0d9bc4ca6"
-      #local_file: "korge-forge-plugin-6.1.0.jar"
+    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korge-forge-plugin-6.1.1.jar::064e254e0de638f759e42fe26fd0ee1fc7fe96aa0d44198224741abfc6140417"
       copy: $out/plugins/KorgePlugin/lib/korge-forge-plugin.jar.jar
   shortcuts:
     - create_shortcuts: true
@@ -42,7 +41,7 @@ actions:
   m2.korlibs:
     - download: "https://github.com/korlibs/korlibs/releases/download/v6.0.0-alpha5/korlibs-6.0.0-alpha5.tar.zstd::f8383e3400e87231d2a4d263f6cd6c5add569165f39eb7a7f7d45658f43d3b3b"
       #local_file: "artifacts-korlibs-6.0.0-alpha5.tar.zstd"
-      extract: $home/.m2/repositories
+      extract: $home/.m2/repository
   m2.korge:
     - download: "https://github.com/korlibs/korge/releases/download/v6.0.0-alpha5/korge-6.0.0-alpha5.tar.zstd::ffacbccbf25871083bb8d82d931db14521e5edf91e370d9ab542bf4d0e13f746"
-      extract: $home/.m2/repositories
+      extract: $home/.m2/repository
