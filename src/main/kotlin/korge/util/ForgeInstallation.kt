@@ -16,7 +16,7 @@ class ForgeInstallation(val folder: File) : Extra by Extra() {
 
         fun list(): List<ForgeInstallation> {
             return when (OS.CURRENT) {
-                OS.OSX -> (InstallBaseFolder.listFiles() ?: emptyArray()).filter { it.isDirectory && it.name.contains("KoRGE Forge") }
+                OS.OSX -> (InstallBaseFolder.listFiles() ?: emptyArray()).filter { it.isDirectory && it.name.contains("KorGE Forge") }
                 else -> (InstallBaseFolder.listFiles() ?: emptyArray()).filter { it.isDirectory }
             }.map { ForgeInstallation(it) }
         }
