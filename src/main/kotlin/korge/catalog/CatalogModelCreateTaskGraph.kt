@@ -41,15 +41,24 @@ class SimpleActionTask(val action: CatalogModel.SimpleAction) : Task(action.name
     }
 }
 
+object DeleteDownloadCacheTask : Task("Delete Download Cache") {
+    val file = File("korge-forge-installer-download-cache")
 
-class DownloadSimpleActionTask(val action: CatalogModel.SimpleAction, name: String = "Download ${action.name}") : Task(name) {
+    val isAvailable get() = file.isDirectory
+
+    override suspend fun execute(context: TaskContext) {
+        file.deleteRecursively()
+    }
+}
+
+class DownloadSimpleActionTask(val action: CatalogModel.SimpleAction, name: String = "Download ${action.downloads.name}") : Task(name) {
     override suspend fun execute(context: TaskContext) {
         for (download in action.downloads.downloads.values) {
             if (download.matches()) {
                 context.report(download.url)
                 downloadFile(
                     download.url,
-                    File(action.localFile ?: File(URL(download.url).path).name),
+                    File("korge-forge-installer-download-cache", action.localFile ?: File(URL(download.url).path).name),
                     progress = context::report
                 )
             }
@@ -66,14 +75,19 @@ class ExtractSimpleActionTask(val action: CatalogModel.SimpleAction, name: Strin
     }
 }
 
-val TaskContext.installer get() = holder.installer ?: error("Can't find 'CatalogModel.Installer' in the TaskContext")
+//val TaskContext.installer: CatalogModel.Installer get() = holder.installer ?: error("Can't find 'CatalogModel.Installer' in the TaskContext")
 var TasksHolder.installer: CatalogModel.Installer? by extraProperty { null }
+var TasksHolder.installation: ForgeInstallation? by extraProperty { null }
+val TasksHolder.installerVersion: String get() = installer?.version ?: installation?.version ?: error("Not installer, not installation are defined")
 
-val CatalogModel.Installer.tools by extraPropertyThis { BaseKorgeForgeInstallTools(this.version) }
+val TasksHolder.tools: BaseKorgeForgeInstallTools by extraPropertyThis { BaseKorgeForgeInstallTools(this.installerVersion) }
+val TaskContext.tools: BaseKorgeForgeInstallTools get() = holder.tools
+
+//val CatalogModel.Installer.tools by extraPropertyThis { BaseKorgeForgeInstallTools(this.version) }
 
 class CreateShortcutActionTask(val action: CatalogModel.SimpleAction) : Task(action.name) {
     override suspend fun execute(context: TaskContext) {
-        val tools = context.installer.tools
+        val tools = context.tools
         val versionFolder = tools.VersionFolder
 
         val exe = when (OS.CURRENT) {

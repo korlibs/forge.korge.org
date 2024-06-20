@@ -75,6 +75,14 @@ fun <T : Task> T.dependsOn(task: Collection<Task>): T {
     return this
 }
 
+class TaskWithHolder(val task: Task, val holder: TasksHolder = TasksHolder()) {
+    companion object {
+        operator fun invoke(task: Task, block: (TasksHolder) -> Unit): TaskWithHolder {
+            return TaskWithHolder(task).also { block(it.holder) }
+        }
+    }
+}
+
 object TaskExecuter {
     //private fun computeTree(task: Task, out: MutableList<Task> = arrayListOf<Task>(), visited: LinkedHashSet<Task> = LinkedHashSet()): List<Task> {
     //    if (task !in visited) {

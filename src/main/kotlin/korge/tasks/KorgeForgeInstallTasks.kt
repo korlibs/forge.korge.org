@@ -1,7 +1,9 @@
 package korge.tasks
 
 import korge.*
+import korge.catalog.*
 import korge.util.*
+import korlibs.datastructure.*
 import kotlinx.coroutines.*
 import java.io.*
 import kotlin.io.path.*
@@ -10,6 +12,7 @@ import kotlin.time.Duration.Companion.seconds
 @Deprecated("")
 val KORGE_FORGE_VERSION = "2024.1.unknown"
 
+/*
 object OpenTask : Task("Opening KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
         when (OS.CURRENT) {
@@ -213,44 +216,6 @@ object DownloadForgeProductInfo : Task("Download KorGE Forge Product Info") {
     }
 }
 
-open class BaseKorgeForgeInstallTools(val version: String) {
-    val Folder = when (OS.CURRENT) {
-        OS.OSX -> File(ForgeInstallation.InstallBaseFolder, "KorGE Forge ${version}.app/Contents")
-        else -> ForgeInstallation.InstallBaseFolder
-    }
-    val MacAPP = Folder.parentFile
-    val VersionFolder = when (OS.CURRENT) {
-        OS.OSX -> Folder
-        else -> File(Folder, version)
-    }
-    val START_MENU = when (OS.CURRENT) {
-        OS.LINUX -> "${System.getProperty("user.home")}/.local/share/applications"
-        else -> "${System.getenv("APPDATA")}\\Microsoft\\Windows\\Start Menu"
-    }
-    val START_MENU_LNK = File(START_MENU, "KorGE Forge ${version}.lnk")
-    val DESKTOP_LNK = File(getDesktopFolder(), "KorGE Forge ${version}.lnk")
-    val KORGE_FORGE_DESKTOP = File(START_MENU, "korge-forge-${version}.desktop")
-
-    val exe = when (OS.CURRENT) {
-        OS.OSX -> File(VersionFolder, "MacOS/korge")
-        OS.LINUX -> File(VersionFolder, "bin/korge.sh")
-        else -> File(VersionFolder, "bin/korge64.exe")
-    }
-    val ico = File(VersionFolder, "bin/korge.ico")
-
-   fun isInstalled(): Boolean = VersionFolder.isDirectory
-
-    fun getInstallerLocalFile(fileName: String): File {
-        val tenativeLocalFiles = listOf(
-            File(fileName).absoluteFile,
-            File(Folder, fileName).absoluteFile
-        )
-        return tenativeLocalFiles.firstOrNull { it.exists() }
-            ?: tenativeLocalFiles.firstOrNull { it.toPath().isWritable() }
-            ?: File(fileName).absoluteFile
-    }
-}
-
 object KorgeForgeInstallTools : BaseKorgeForgeInstallTools(KORGE_FORGE_VERSION) {
 
 }
@@ -330,5 +295,46 @@ object ExtractJBR : Task("Extracting JBR", DownloadJBR, ExtractExtraLibs, Extrac
     override suspend fun execute(context: TaskContext) {
         context.report("${outDirectory.absoluteFile}")
         TarTools(removeFirstDir = true).extractTarGz(DownloadJBR.localFile, outDirectory, context::report)
+    }
+}
+*/
+
+val CatalogModel.Installer.tools by extraPropertyThis { BaseKorgeForgeInstallTools(version) }
+
+open class BaseKorgeForgeInstallTools(val version: String) {
+    val Folder = when (OS.CURRENT) {
+        OS.OSX -> File(ForgeInstallation.InstallBaseFolder, "KorGE Forge ${version}.app/Contents")
+        else -> ForgeInstallation.InstallBaseFolder
+    }
+    val MacAPP = Folder.parentFile
+    val VersionFolder = when (OS.CURRENT) {
+        OS.OSX -> Folder
+        else -> File(Folder, version)
+    }
+    val START_MENU = when (OS.CURRENT) {
+        OS.LINUX -> "${System.getProperty("user.home")}/.local/share/applications"
+        else -> "${System.getenv("APPDATA")}\\Microsoft\\Windows\\Start Menu"
+    }
+    val START_MENU_LNK = File(START_MENU, "KorGE Forge ${version}.lnk")
+    val DESKTOP_LNK = File(getDesktopFolder(), "KorGE Forge ${version}.lnk")
+    val KORGE_FORGE_DESKTOP = File(START_MENU, "korge-forge-${version}.desktop")
+
+    val exe = when (OS.CURRENT) {
+        OS.OSX -> File(VersionFolder, "MacOS/korge")
+        OS.LINUX -> File(VersionFolder, "bin/korge.sh")
+        else -> File(VersionFolder, "bin/korge64.exe")
+    }
+    val ico = File(VersionFolder, "bin/korge.ico")
+
+    fun isInstalled(): Boolean = VersionFolder.isDirectory
+
+    fun getInstallerLocalFile(fileName: String): File {
+        val tenativeLocalFiles = listOf(
+            File(fileName).absoluteFile,
+            File(Folder, fileName).absoluteFile
+        )
+        return tenativeLocalFiles.firstOrNull { it.exists() }
+            ?: tenativeLocalFiles.firstOrNull { it.toPath().isWritable() }
+            ?: File(fileName).absoluteFile
     }
 }

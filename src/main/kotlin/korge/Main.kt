@@ -1,24 +1,40 @@
 package korge
 
 import korge.app.*
+import korge.catalog.*
 import korge.composable.*
 import korge.tasks.*
+import korge.util.*
 import kotlinx.coroutines.*
 import java.awt.*
 import javax.imageio.*
+import javax.xml.catalog.Catalog
 import kotlin.system.*
 
 fun main(args: Array<String>) {
     val vargs = ArrayDeque(args.toList())
-    var tasks = arrayListOf<Task>()
+    var tasks = arrayListOf<TaskWithHolder>()
     while (vargs.isNotEmpty()) {
         val item = vargs.removeFirst()
         when (item) {
             "--gui" -> tasks.clear()
-            "--install" -> tasks.add(InstallKorgeForge)
-            "--uninstall" -> tasks.add(UninstallKorgeForge)
-            "--open" -> tasks.add(OpenTask)
-            "--openfolder" -> tasks.add(OpenInstallFolderTask)
+            "--install" -> {
+                val installer = CatalogModel.DEFAULT.installers.first()
+                tasks.add(TaskWithHolder(installer.task) { it.installer = installer })
+            }
+            "--uninstall" -> {
+                for (installation in ForgeInstallation.list()) {
+                    tasks.add(TaskWithHolder(installation.uninstallTask) { it.installation = installation })
+                }
+            }
+            "--open" -> {
+                val installation = ForgeInstallation.list().first()
+                tasks.add(TaskWithHolder(installation.openTask) { it.installation = installation })
+            }
+            "--openfolder" -> {
+                val installation = ForgeInstallation.list().first()
+                tasks.add(TaskWithHolder(installation.openFolderTask) { it.installation = installation })
+            }
             "help", "-?", "-h", "--help", "/?", "/help" -> {
                 println("KorGE Forge Installer $KORGE_FORGE_VERSION")
                 println(" --install - Installs KorGE Forge silently")
@@ -37,7 +53,7 @@ fun main(args: Array<String>) {
         tasks.isNotEmpty() -> {
             runBlocking {
                 for (task in tasks) {
-                    TaskExecuter.execute(task) {
+                    TaskExecuter.execute(task.task, task.holder) {
                         print("$it       \r")
                     }
                     println()
@@ -46,7 +62,7 @@ fun main(args: Array<String>) {
         }
         else -> {
             ComposeJFrame("Install KorGE Forge", Dimension(640, 400), configureFrame = { frame ->
-                val image = runCatching { ImageIO.read(InstallKorgeForge::class.java.getResource("/install.png")) }.getOrNull()
+                val image = runCatching { ImageIO.read(TaskInfo::class.java.getResource("/install.png")) }.getOrNull()
                 try {
                     if (image != null) setTaskbarIcon(image)
                 } catch (e: Throwable) {

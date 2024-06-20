@@ -4,6 +4,8 @@ import korge.*
 import korlibs.datastructure.*
 import korlibs.io.dynamic.*
 import korlibs.io.serialization.yaml.*
+import java.io.*
+import java.net.*
 
 class CatalogModel(val info: Dyn) {
     val installers = info["installers"].map.map {
@@ -45,6 +47,8 @@ class CatalogModel(val info: Dyn) {
 
     inner class Downloads(val downloads: Map<String, Download> = emptyMap()) {
         val model get() = this@CatalogModel
+
+        val name: String get() = downloads.values.filter { it.matches() }.joinToString(", ") { it.baseName }
     }
 
     inner class Download(val type: String, val url: String, val sha256: String?) {
@@ -53,6 +57,7 @@ class CatalogModel(val info: Dyn) {
         var arch: ARCH? = typeParts.firstNotNullOfOrNull { ARCH[it] }
         fun matches(os: OS = OS.CURRENT, arch: ARCH = ARCH.CURRENT): Boolean = (this.os == os || this.os == null)
             && (this.arch == arch || this.arch == null)
+        val baseName get() = File(URL(url).path).name
 
         override fun toString(): String = "Download(type=$type, os=$os, arch=$arch, url=$url, sha256=$sha256)"
     }
