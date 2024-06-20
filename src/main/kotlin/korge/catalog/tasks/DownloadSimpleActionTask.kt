@@ -11,7 +11,8 @@ class DownloadSimpleActionTask(val action: CatalogModel.SimpleAction, name: Stri
                 downloadFile(
                     download.url,
                     download.realLocalFile(action),
-                    progress = context::report
+                    progress = context::report,
+                    sha256 = download.sha256
                 )
             }
         }

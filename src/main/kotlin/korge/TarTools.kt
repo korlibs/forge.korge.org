@@ -26,7 +26,7 @@ open class TarTools(
         val name = inputFile.name
         when {
             name.endsWith("tar.gz", ignoreCase = true) -> extractTarGz(inputFile, outputDir, report)
-            name.endsWith("tar.zst", ignoreCase = true) -> extractTarZstd(inputFile, outputDir, report)
+            name.endsWith("tar.zst", ignoreCase = true) || name.endsWith("tar.zstd", ignoreCase = true) -> extractTarZstd(inputFile, outputDir, report)
             else -> error("Unknown extension for file ${inputFile.name}")
         }
     }
@@ -59,10 +59,13 @@ open class TarTools(
 
     fun extractTar(tarInputStream: InputStream, outputDir: File) {
         val vv = Random.nextULong()
-        if (!outputDir.isDirectory) {
+        //if (!outputDir.isDirectory) {
+        run {
             val tmpDir = File(outputDir.parentFile, "${outputDir.name}.$vv.tmp")
             for ((tarInput, entry) in tarInputStream.asTarSequence()) {
-                val fullName = processOutputName(entry.name) ?: continue
+                val fullName = processOutputName(entry.name)
+                //println("EXTRACT: $fullName -> $fullName")
+                if (fullName == null) continue
                 val outputFile = File(tmpDir, fullName)
                 when {
                     entry.isDirectory -> outputFile.mkdirs()

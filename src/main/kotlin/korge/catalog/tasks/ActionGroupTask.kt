@@ -8,13 +8,6 @@ val CatalogModel.ActionGroup.task: ActionGroupTask by extraPropertyThis { Action
 class ActionGroupTask(val group: CatalogModel.ActionGroup) : Task(group.name) {
     val actions = dependsOn(group.actions.map { it.task })
 
-    init {
-        for (n in 1 until actions.size) {
-            actions[n].extractTask.dependsOn(actions[n - 1].extractTask)
-            actions[n].createShortcutTask?.dependsOn(actions[n - 1])
-        }
-    }
-
     override suspend fun execute(context: TaskContext) {
     }
 

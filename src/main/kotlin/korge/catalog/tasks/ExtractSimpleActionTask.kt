@@ -65,12 +65,14 @@ class ExtractSimpleActionTask(val action: CatalogModel.SimpleAction, name: Strin
 
             if (extract != null) {
                 val targetFolder = File(context.tools.expand(extract))
-                println("EXTRACT: localFile=$localFile, targetFolder=$targetFolder")
+                //println("EXTRACT: localFile=$localFile, targetFolder=$targetFolder")
                 TarTools(processOutputName = processOutputName).extract(localFile, targetFolder, context::report)
             }
 
-            if (copy != null) {
-                localFile.copyTo(File(context.tools.expand(copy)), overwrite = true)
+            if (copy != null && copy.isNotEmpty()) {
+                val targetFile = File(context.tools.expand(copy))
+                //println("COPY: localFile=$localFile, targetFile=$targetFile")
+                localFile.copyTo(targetFile, overwrite = true)
             }
         }
     }

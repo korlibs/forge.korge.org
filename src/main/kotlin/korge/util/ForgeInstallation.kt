@@ -21,4 +21,6 @@ class ForgeInstallation(val folder: File) : Extra by Extra() {
             }.map { ForgeInstallation(it) }
         }
     }
+
+    override fun toString(): String = "ForgeInstallation($version)"
 }
