@@ -21,6 +21,12 @@ enum class OS {
                 else -> LINUX
             }
         }
+        operator fun get(name: String): OS? {
+            if (name.startsWith("win", ignoreCase = true)) return OS.WINDOWS
+            if (name.startsWith("mac", ignoreCase = true) || name.startsWith("osx", ignoreCase = true)) return OS.OSX
+            if (name.startsWith("lin", ignoreCase = true) || name.startsWith("unix", ignoreCase = true)) return OS.LINUX
+            return null
+        }
     }
 }
 
@@ -44,6 +50,12 @@ enum class ARCH {
                 else -> X64
             }
         }
+
+        operator fun get(name: String): ARCH? {
+            if (name.startsWith("arm", ignoreCase = true) || name.startsWith("aarch", ignoreCase = true)) return return ARCH.ARM
+            if (name.contains("x64") || name.startsWith("x86_64", ignoreCase = true) || name.startsWith("amd64", ignoreCase = true)) return ARCH.X64
+            return null
+        }
     }
 }
 
@@ -53,6 +65,7 @@ suspend fun downloadFile(
     sha256: String? = null,
     progress: (remaining: LongRange) -> Unit = { range -> }
 ) {
+    val outFile = outFile.absoluteFile
     withContext(Dispatchers.IO) {
         if (!outFile.exists()) {
             outFile.parentFile.mkdirs()

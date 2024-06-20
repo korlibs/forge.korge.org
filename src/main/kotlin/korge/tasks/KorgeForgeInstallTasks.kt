@@ -1,12 +1,14 @@
 package korge.tasks
 
 import korge.*
+import korge.util.*
 import kotlinx.coroutines.*
 import java.io.*
 import kotlin.io.path.*
 import kotlin.time.Duration.Companion.seconds
 
-val KORGE_FORGE_VERSION = "2024.1"
+@Deprecated("")
+val KORGE_FORGE_VERSION = "2024.1.unknown"
 
 object OpenTask : Task("Opening KorGE Forge") {
     override suspend fun execute(context: TaskContext) {
@@ -211,26 +213,32 @@ object DownloadForgeProductInfo : Task("Download KorGE Forge Product Info") {
     }
 }
 
-object KorgeForgeInstallTools {
+open class BaseKorgeForgeInstallTools(val version: String) {
     val Folder = when (OS.CURRENT) {
-        OS.LINUX -> File(System.getProperty("user.home"), ".local/share/KorGEForge")
-        OS.OSX -> File(System.getProperty("user.home"), "Applications/KorGE Forge ${KORGE_FORGE_VERSION}.app/Contents")
-        else -> File(System.getProperty("user.home"), "AppData/Local/KorGEForge")
+        OS.OSX -> File(ForgeInstallation.InstallBaseFolder, "KorGE Forge ${version}.app/Contents")
+        else -> ForgeInstallation.InstallBaseFolder
     }
     val MacAPP = Folder.parentFile
     val VersionFolder = when (OS.CURRENT) {
         OS.OSX -> Folder
-        else -> File(Folder, KORGE_FORGE_VERSION)
+        else -> File(Folder, version)
     }
     val START_MENU = when (OS.CURRENT) {
         OS.LINUX -> "${System.getProperty("user.home")}/.local/share/applications"
         else -> "${System.getenv("APPDATA")}\\Microsoft\\Windows\\Start Menu"
     }
-    val START_MENU_LNK = File(START_MENU, "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
-    val DESKTOP_LNK = File(getDesktopFolder(), "KorGE Forge ${KORGE_FORGE_VERSION}.lnk")
-    val KORGE_FORGE_DESKTOP = File(START_MENU, "korge-forge-${KORGE_FORGE_VERSION}.desktop")
+    val START_MENU_LNK = File(START_MENU, "KorGE Forge ${version}.lnk")
+    val DESKTOP_LNK = File(getDesktopFolder(), "KorGE Forge ${version}.lnk")
+    val KORGE_FORGE_DESKTOP = File(START_MENU, "korge-forge-${version}.desktop")
 
-    fun isInstalled(): Boolean = VersionFolder.isDirectory
+    val exe = when (OS.CURRENT) {
+        OS.OSX -> File(VersionFolder, "MacOS/korge")
+        OS.LINUX -> File(VersionFolder, "bin/korge.sh")
+        else -> File(VersionFolder, "bin/korge64.exe")
+    }
+    val ico = File(VersionFolder, "bin/korge.ico")
+
+   fun isInstalled(): Boolean = VersionFolder.isDirectory
 
     fun getInstallerLocalFile(fileName: String): File {
         val tenativeLocalFiles = listOf(
@@ -241,6 +249,10 @@ object KorgeForgeInstallTools {
             ?: tenativeLocalFiles.firstOrNull { it.toPath().isWritable() }
             ?: File(fileName).absoluteFile
     }
+}
+
+object KorgeForgeInstallTools : BaseKorgeForgeInstallTools(KORGE_FORGE_VERSION) {
+
 }
 
 
@@ -319,52 +331,4 @@ object ExtractJBR : Task("Extracting JBR", DownloadJBR, ExtractExtraLibs, Extrac
         context.report("${outDirectory.absoluteFile}")
         TarTools(removeFirstDir = true).extractTarGz(DownloadJBR.localFile, outDirectory, context::report)
     }
-}
-
-fun createWindowsLnk(exe: File, lnk: File, ico: File, description: String) {
-    val createShortcutPs1File = File(System.getProperty("java.io.tmpdir"), "create_shortcut.ps1")
-    createShortcutPs1File.writeText("""
-        param (
-            [string]${'$'}targetPath,
-            [string]${'$'}shortcutPath,
-            [string]${'$'}description,
-            [string]${'$'}iconPath
-        )
-
-        ${'$'}WScriptShell = New-Object -ComObject WScript.Shell
-        ${'$'}shortcut = ${'$'}WScriptShell.CreateShortcut(${'$'}shortcutPath)
-        ${'$'}shortcut.TargetPath = ${'$'}targetPath
-        ${'$'}shortcut.Description = ${'$'}description
-        ${'$'}shortcut.IconLocation = ${'$'}iconPath
-        ${'$'}shortcut.Save()
-    """.trimIndent())
-
-    ProcessBuilder(
-        "powershell.exe",
-        "-NoProfile",
-        "-ExecutionPolicy", "Bypass",
-        "-File", createShortcutPs1File.absolutePath,
-        "-targetPath", exe.absolutePath,
-        "-shortcutPath", lnk.absolutePath,
-        "-description", description,
-        "-iconPath", ico.absolutePath
-    ).inheritIO().start().waitFor()
-
-    //powershell -NoProfile -ExecutionPolicy Bypass -File create_shortcut.ps1 -targetPath demo.exe -shortcutPath demo.lnk -description "hello" -iconPath = "demo.ico"
-}
-
-fun getDesktopFolder(): File = when (OS.CURRENT) {
-    OS.WINDOWS -> {
-        val tryPath = runCatching {
-            ProcessBuilder(
-                "powershell.exe",
-                "-NoProfile",
-                "-ExecutionPolicy", "Bypass",
-                "/c", "[Environment]::GetFolderPath('Desktop')",
-            ).inheritIO().start().also { it.waitFor() }.inputStream.bufferedReader().readText().takeIf { it.isNotBlank() }
-        }.getOrNull()
-        tryPath?.let { File(it) }?.takeIf { it.isDirectory } ?: File(System.getenv("USERPROFILE"), "Desktop")
-    }
-    OS.OSX -> File(System.getProperty("user.home"), "Desktop")
-    OS.LINUX -> File(System.getProperty("user.home"), "Desktop")
 }

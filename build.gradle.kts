@@ -44,6 +44,8 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation("io.airlift:aircompressor:0.27")
     implementation("org.apache.commons:commons-compress:1.26.2")
+    implementation("com.soywiz:korlibs-serialization-jvm:6.0.0-alpha5")
+    implementation("com.soywiz:korlibs-dyn-jvm:6.0.0-alpha5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
 }
 

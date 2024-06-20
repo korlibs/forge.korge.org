@@ -45,7 +45,7 @@ fun main(args: Array<String>) {
             }
         }
         else -> {
-            ComposeJFrame("Install KorGE Forge $KORGE_FORGE_VERSION", Dimension(640, 400), configureFrame = { frame ->
+            ComposeJFrame("Install KorGE Forge", Dimension(640, 400), configureFrame = { frame ->
                 val image = runCatching { ImageIO.read(InstallKorgeForge::class.java.getResource("/install.png")) }.getOrNull()
                 try {
                     if (image != null) setTaskbarIcon(image)

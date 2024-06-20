@@ -1,9 +1,10 @@
 package korge
 
+import korlibs.datastructure.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.*
 
-class TasksHolder {
+class TasksHolder : Extra by Extra() {
     private val tasksToContext = LinkedHashMap<Task, TaskContext>()
     fun getTotalTasks(): Int = synchronized(this) { tasksToContext.size }
     fun getTaskContext(task: Task): TaskContext = synchronized(this) { tasksToContext.getOrPut(task) { TaskContext(task, this) } }
@@ -55,9 +56,23 @@ class TaskContext(val task: Task, val holder: TasksHolder) {
     }
 }
 
-abstract class Task(val name: String, vararg val dependencies: Task) {
+abstract class Task(val name: String, vararg val baseDependencies: Task) {
+    val dependencies: MutableList<Task> = baseDependencies.toMutableList()
+    fun <T : Task> dependsOn(task: T): T {
+        dependencies += task
+        return task
+    }
+    fun <T : Collection<out Task>> dependsOn(tasks: T): T {
+        dependencies += tasks
+        return tasks
+    }
     abstract suspend fun execute(context: TaskContext)
     override fun toString(): String = "${this::class.simpleName}"
+}
+
+fun <T : Task> T.dependsOn(task: Collection<Task>): T {
+    dependencies += task
+    return this
 }
 
 object TaskExecuter {
@@ -70,11 +85,10 @@ object TaskExecuter {
     //    return out
     //}
 
-    suspend fun execute(task: Task, report: (tasks: List<TaskContext>) -> Unit = {
+    suspend fun execute(task: Task, tasks: TasksHolder = TasksHolder(), report: (tasks: List<TaskContext>) -> Unit = {
         print("${System.currentTimeMillis()}[${it.size}]: $it\r")
     }) {
         println("Executing $task...")
-        val tasks = TasksHolder()
         val job = CoroutineScope(coroutineContext + SupervisorJob()).async {
             tasks.getTaskContext(task).executeOnce()
         }
