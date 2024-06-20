@@ -1,7 +1,7 @@
 installers:
-  KorGE Forge 2024.1.2-6.1.0:
+  KorGE Forge 2024.1.2-6.1.0b:
     version: 2024.1
-    name: "KorGE Forge 2024.1 - 6.1.0"
+    name: "KorGE Forge 2024.1 - 6.1.0b"
     actions: ["jbr_21_0_3", "2024_1", "forge_610", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
   KorGE Forge 2024.1.2:
     version: 2024.1
