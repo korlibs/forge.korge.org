@@ -3,10 +3,38 @@ package korge.catalog.tasks
 import korge.*
 import korge.catalog.*
 import korge.util.*
+import java.io.*
+import java.util.jar.JarFile
+import java.util.zip.*
+
+object PatchKorgeClassPath {
+    fun patch(classPathFile: File) {
+        val classPaths = PluginClasspath.parse(classPathFile.readBytes())
+        for (entry in classPaths.entries) {
+            if (entry.name == "KorgePlugin") {
+                for (jar in entry.jars) {
+                    ZipFile(File(classPathFile.parentFile, jar)).use {
+                        val pluginXml: ZipEntry? = it.getEntry("META-INF/plugin.xml")
+                        if (pluginXml != null) {
+                            val pluginXmlBytes = it.getInputStream(pluginXml).use { it.readBytes() }
+                            entry.pluginXml = pluginXmlBytes.decodeToString()
+                        }
+                    }
+                }
+            }
+        }
+        classPathFile.writeBytes(classPaths.encode())
+    }
+}
 
 class CreateShortcutActionTask(val action: CatalogModel.SimpleAction) : Task(action.name) {
     override suspend fun execute(context: TaskContext) {
         val tools = context.tools
+
+        context.report("Patching classpaths")
+
+        println("PATCHING CLASSPATHS:")
+        PatchKorgeClassPath.patch(tools.classpath)
 
         context.report("Creating shortcuts")
         when (OS.CURRENT) {

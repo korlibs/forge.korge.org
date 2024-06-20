@@ -99,6 +99,7 @@ open class TarTools(
                 }
             }
             if (outputDir.isDirectory) {
+                println("COPY_RECURSIVELY: $tmpDir -> $outputDir")
                 tmpDir.copyRecursively(outputDir, overwrite = true)
                 tmpDir.deleteRecursively()
             } else {

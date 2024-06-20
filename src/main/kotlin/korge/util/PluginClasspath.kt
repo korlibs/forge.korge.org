@@ -3,7 +3,7 @@ package korge.util
 import java.nio.*
 
 class PluginClasspath(val version: Int, val entries: List<Plugin>) {
-    class Plugin(val name: String, val pluginXml: String, val jars: List<String>)
+    class Plugin(var name: String, var pluginXml: String, var jars: List<String>)
 
     fun encode(): ByteArray {
         val bytes = ByteArray(8 * 1024 * 1024)

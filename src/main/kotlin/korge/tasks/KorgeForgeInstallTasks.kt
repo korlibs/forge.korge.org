@@ -154,6 +154,8 @@ open class BaseKorgeForgeInstallTools(val version: String) {
     val ico = File(VersionFolder, "bin/korge.ico")
     val svgIco = File(VersionFolder, "bin/korge.svg")
     val desc = "KorGE Forge $version"
+    val pluginsFolder = File(VersionFolder, "plugins")
+    val classpath = File(pluginsFolder, "plugin-classpath.txt")
 
     fun isInstalled(): Boolean = VersionFolder.isDirectory
 
