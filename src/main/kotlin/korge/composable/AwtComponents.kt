@@ -106,6 +106,36 @@ fun Button(text: String, enabled: Boolean = true, onClick: () -> Unit = { }) {
     })
 }
 
+class MyJComboBox<T> : JComboBox<T>() {
+    var oldSelectionIndex: Int = 0
+}
+
+@Composable
+fun <T> DropDown(items: List<T>, selectedIndex: Int = 0, enabled: Boolean = true, onSelect: (Int, T) -> Unit = { index, item -> }) {
+    ComposeAwtComponent({
+        MyJComboBox<T>().also {
+            it.isOpaque = false
+        } }, {
+        set(items) {
+            model = DefaultComboBoxModel<T>((items as List<Any>).toTypedArray<Any>() as Array<T>)
+        }
+        set(selectedIndex) {
+            this.oldSelectionIndex = selectedIndex
+            this.selectedIndex = selectedIndex
+        }
+        set(enabled) { this.isEnabled = enabled }
+        set(onSelect) {
+            //println("Update onClick listener: id=${this.buttonId}, $onClick")
+            this.getListeners(ActionListener::class.java).forEach { this.removeActionListener(it) }
+            this.addActionListener {
+                //println("onClick!: id=${this.buttonId}, $onClick")
+                onSelect(this.selectedIndex, selectedItem as T)
+                this.selectedIndex = oldSelectionIndex
+            }
+        }
+    })
+}
+
 @Composable
 fun Image(image: Image?) {
     ComposeAwtComponent({ JLabel("") }, {

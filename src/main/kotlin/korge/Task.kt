@@ -1,9 +1,10 @@
 package korge
 
+import korlibs.datastructure.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.*
 
-class TasksHolder {
+class TasksHolder : Extra by Extra() {
     private val tasksToContext = LinkedHashMap<Task, TaskContext>()
     fun getTotalTasks(): Int = synchronized(this) { tasksToContext.size }
     fun getTaskContext(task: Task): TaskContext = synchronized(this) { tasksToContext.getOrPut(task) { TaskContext(task, this) } }
@@ -55,9 +56,37 @@ class TaskContext(val task: Task, val holder: TasksHolder) {
     }
 }
 
-abstract class Task(val name: String, vararg val dependencies: Task) {
+abstract class Task(val name: String, vararg val baseDependencies: Task) {
+    val dependencies: MutableList<Task> = baseDependencies.toMutableList()
+    fun <T : Task?> dependsOn(task: T): T {
+        if (task != null) dependencies += task
+        return task
+    }
+    fun <T : Collection<out Task>> dependsOn(tasks: T): T {
+        dependencies += tasks
+        return tasks
+    }
     abstract suspend fun execute(context: TaskContext)
     override fun toString(): String = "${this::class.simpleName}"
+    fun graphVisitor(visited: MutableSet<Task> = mutableSetOf(), visit: (Task) -> Unit) {
+        if (this in visited) return
+        visited += this
+        for (dep in dependencies) dep.graphVisitor(visited, visit)
+        visit(this)
+    }
+}
+
+fun <T : Task> T.dependsOn(task: Collection<Task>): T {
+    dependencies += task
+    return this
+}
+
+class TaskWithHolder(val task: Task, val holder: TasksHolder = TasksHolder()) {
+    companion object {
+        operator fun invoke(task: Task, block: (TasksHolder) -> Unit): TaskWithHolder {
+            return TaskWithHolder(task).also { block(it.holder) }
+        }
+    }
 }
 
 object TaskExecuter {
@@ -70,11 +99,14 @@ object TaskExecuter {
     //    return out
     //}
 
-    suspend fun execute(task: Task, report: (tasks: List<TaskContext>) -> Unit = {
+    suspend fun execute(task: Task, tasks: TasksHolder = TasksHolder(), report: (tasks: List<TaskContext>) -> Unit = {
         print("${System.currentTimeMillis()}[${it.size}]: $it\r")
     }) {
         println("Executing $task...")
-        val tasks = TasksHolder()
+        task.graphVisitor {
+            println(" - ${it::class.simpleName} DEPENDS ${it.dependencies.map { it::class.simpleName }} ----> $it")
+        }
+
         val job = CoroutineScope(coroutineContext + SupervisorJob()).async {
             tasks.getTaskContext(task).executeOnce()
         }
