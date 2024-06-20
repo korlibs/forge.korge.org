@@ -34,7 +34,9 @@ class CreateShortcutActionTask(val action: CatalogModel.SimpleAction) : Task(act
         context.report("Patching classpaths")
 
         println("PATCHING CLASSPATHS:")
-        PatchKorgeClassPath.patch(tools.classpath)
+        if (tools.classpath.exists()) {
+            PatchKorgeClassPath.patch(tools.classpath)
+        }
 
         context.report("Installing")
 
