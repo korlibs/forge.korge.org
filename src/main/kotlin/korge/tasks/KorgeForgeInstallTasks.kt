@@ -157,6 +157,8 @@ open class BaseKorgeForgeInstallTools(val version: String) {
     val pluginsFolder = File(VersionFolder, "plugins")
     val classpath = File(pluginsFolder, "plugin-classpath.txt")
 
+    val linuxChromeSandbox = File(VersionFolder, "jbr/lib/chrome-sandbox")
+
     fun isInstalled(): Boolean = VersionFolder.isDirectory
     val installedVersionFile: File get() = File(VersionFolder, "version.txt")
     val installedVersion: String? get() = runCatching { installedVersionFile.takeIf { it.exists() }?.readText() }.getOrNull()

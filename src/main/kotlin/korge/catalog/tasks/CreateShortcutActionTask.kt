@@ -1,11 +1,18 @@
 package korge.catalog.tasks
 
-import korge.*
-import korge.catalog.*
-import korge.util.*
-import java.io.*
-import java.util.jar.JarFile
-import java.util.zip.*
+import korge.OS
+import korge.Task
+import korge.TaskContext
+import korge.catalog.CatalogModel
+import korge.catalog.installer
+import korge.catalog.tools
+import korge.util.PluginClasspath
+import korge.util.createWindowsLnk
+import java.io.File
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import javax.swing.JOptionPane
+import kotlin.io.path.getOwner
 
 object PatchKorgeClassPath {
     fun patch(classPathFile: File) {
@@ -36,6 +43,32 @@ class CreateShortcutActionTask(val action: CatalogModel.SimpleAction) : Task(act
         println("PATCHING CLASSPATHS:")
         if (tools.classpath.exists()) {
             PatchKorgeClassPath.patch(tools.classpath)
+        }
+
+        if (OS.CURRENT == OS.LINUX) {
+            if (tools.linuxChromeSandbox.toPath().getOwner()?.name != "root") {
+                val command = arrayOf(
+                    "sh", "-c",
+                    "/usr/bin/chown root:root '${tools.linuxChromeSandbox}'; /usr/bin/chmod 04755 '${tools.linuxChromeSandbox}'"
+                )
+
+                when {
+                    File("/usr/bin/pkexec").exists() -> {
+                        ProcessBuilder("/usr/bin/pkexec", "--disable-internal-agent", *command).start().waitFor()
+                    }
+                    File("/usr/bin/kdesudo").exists() -> {
+                        ProcessBuilder("/usr/bin/kdesudo", "--comment", "System needs administrative privileges. Please enter your password.", *command).start().waitFor()
+                    }
+                    File("/usr/bin/gksudo").exists() -> {
+                        ProcessBuilder("/usr/bin/gksudo", "--preserve-env", "--sudo-mode", "--description", "System", *command).start().waitFor()
+                    }
+                    else -> {
+                        val message = "Couldn't find a mechanism to set permissions. Please execute: ${command.joinToString(" ")}"
+                        println(message)
+                        JOptionPane.showConfirmDialog(null, message, "Information", JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE)
+                    }
+                }
+            }
         }
 
         context.report("Installing")
