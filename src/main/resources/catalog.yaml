@@ -29,7 +29,7 @@ actions:
       extract: $out
     - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-extra-libs-241.15989.20240606.tar.zst::118e10e049457e28120ff6dd409f1212e9b6684962b49ab067973ddc347de127"
       filter: extra_libs
-      extract: $out/libs
+      extract: $out/lib
     - download.macos: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-mac-product-info.241.15989.20240606.json::0bcd093ea0df95f49ead6c20cd8bfc28d17940590c2e4bf64ecb97e274b637c1"
       copy: $out/Resources/product-info.json
   forge_610:
