@@ -158,6 +158,8 @@ open class BaseKorgeForgeInstallTools(val version: String) {
     val classpath = File(pluginsFolder, "plugin-classpath.txt")
 
     fun isInstalled(): Boolean = VersionFolder.isDirectory
+    val installedVersionFile: File get() = File(VersionFolder, "version.txt")
+    val installedVersion: String? get() = runCatching { installedVersionFile.takeIf { it.exists() }?.readText() }.getOrNull()
 
     fun getInstallerLocalFile(fileName: String): File {
         val tenativeLocalFiles = listOf(

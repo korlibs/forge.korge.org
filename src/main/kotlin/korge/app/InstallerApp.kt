@@ -76,7 +76,14 @@ fun InstallerApp() {
                 }
                 //Button("Install", enabled = action == null && !selectedInstaller.tools.isInstalled()) {
                 val alreadyInstalled = selectedInstaller.tools.isInstalled()
-                Button(if (alreadyInstalled) "Reinstall" else "Install", enabled = action == null) {
+                val installedVersion = selectedInstaller.tools.installedVersion
+                Button(
+                    when {
+                        action is InstallerTask -> "Installing..."
+                        alreadyInstalled && installedVersion != selectedInstaller.name -> "Update '$installedVersion' -> '${selectedInstaller.name}'"
+                        alreadyInstalled -> "Reinstall"
+                        else -> "Install"
+                    }, enabled = action == null) {
                     println("Install pressed")
                     //action = InstallKorgeForge
                     action = installers[selectedIndex].task

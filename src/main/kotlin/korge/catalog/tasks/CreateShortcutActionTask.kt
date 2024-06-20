@@ -36,6 +36,10 @@ class CreateShortcutActionTask(val action: CatalogModel.SimpleAction) : Task(act
         println("PATCHING CLASSPATHS:")
         PatchKorgeClassPath.patch(tools.classpath)
 
+        context.report("Installing")
+
+        tools.installedVersionFile.writeText(context.holder.installer?.name ?: tools.version)
+
         context.report("Creating shortcuts")
         when (OS.CURRENT) {
             OS.LINUX -> {
