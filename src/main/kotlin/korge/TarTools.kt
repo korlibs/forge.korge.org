@@ -77,7 +77,8 @@ open class TarTools(
                         Files.setLastModifiedTime(outputFile.toPath(), entry.lastModifiedTime)
 
                         if (OS.CURRENT != OS.WINDOWS) {
-                            val mode = "755".toInt(8)
+                            //val mode = "755".toInt(8)
+                            val mode = entry.mode
 
                             // Convert mode to set of PosixFilePermission
                             val permissions = mutableSetOf<PosixFilePermission>()
