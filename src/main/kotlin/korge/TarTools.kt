@@ -61,7 +61,8 @@ open class TarTools(
         val vv = Random.nextULong()
         //if (!outputDir.isDirectory) {
         run {
-            val tmpDir = File(outputDir.parentFile, "${outputDir.name}.$vv.tmp")
+            //val tmpDir = File(outputDir.parentFile, "${outputDir.name}.$vv.tmp")
+            val tmpDir = outputDir
             for ((tarInput, entry) in tarInputStream.asTarSequence()) {
                 val fullName = processOutputName(entry.name)
                 //println("EXTRACT: $fullName -> $fullName")
@@ -99,13 +100,13 @@ open class TarTools(
                     }
                 }
             }
-            if (outputDir.isDirectory) {
-                println("COPY_RECURSIVELY: $tmpDir -> $outputDir")
-                tmpDir.copyRecursively(outputDir, overwrite = true)
-                tmpDir.deleteRecursively()
-            } else {
-                tmpDir.renameTo(outputDir)
-            }
+            //if (outputDir.isDirectory) {
+            //    println("COPY_RECURSIVELY: $tmpDir -> $outputDir")
+            //    tmpDir.copyRecursively(outputDir, overwrite = true)
+            //    tmpDir.deleteRecursively()
+            //} else {
+            //    tmpDir.renameTo(outputDir)
+            //}
         }
     }
 
