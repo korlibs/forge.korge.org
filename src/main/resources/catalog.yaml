@@ -31,7 +31,7 @@ actions:
   2024_1_patch2:
   m2.korlibs:
     - download: "https://github.com/korlibs/korlibs/releases/download/v6.0.0-alpha5/korlibs-6.0.0-alpha5.tar.zstd::972f5a76215864f4bbc144a741b29479220aea9dd901c13478e96c45a385c72d"
-      local_file: "artifacts-korlibs-6.0.0-alpha5.tar.zstd"
+      #local_file: "artifacts-korlibs-6.0.0-alpha5.tar.zstd"
       copy: $home/.m2/repositories
   m2.korge:
     - download: "https://github.com/korlibs/korge/releases/download/v6.0.0-alpha5/korge-6.0.0-alpha5.tar.zstd::972f5a76215864f4bbc144a741b29479220aea9dd901c13478e96c45a385c72d"

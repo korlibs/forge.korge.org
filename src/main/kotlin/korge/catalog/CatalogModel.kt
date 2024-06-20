@@ -42,13 +42,20 @@ class CatalogModel(val info: Dyn) {
         val name: String = "$groupName:$index",
         val createShortcut: String? = null,
     ) : Extra by Extra() {
+        val ldownloads get() = downloads.ldownloads
         val model get() = this@CatalogModel
+
+        override fun toString(): String = "Action[$name][$index]"
     }
 
     inner class Downloads(val downloads: Map<String, Download> = emptyMap()) {
         val model get() = this@CatalogModel
 
+        val ldownloads get() = downloads.values
+
         val name: String get() = downloads.values.filter { it.matches() }.joinToString(", ") { it.baseName }
+
+        override fun toString(): String = "$ldownloads"
     }
 
     inner class Download(val type: String, val url: String, val sha256: String?) {
@@ -58,6 +65,11 @@ class CatalogModel(val info: Dyn) {
         fun matches(os: OS = OS.CURRENT, arch: ARCH = ARCH.CURRENT): Boolean = (this.os == os || this.os == null)
             && (this.arch == arch || this.arch == null)
         val baseName get() = File(URL(url).path).name
+
+        fun realLocalFile(action: SimpleAction): File {
+            //action.localFile ?: baseName
+            return File("korge-forge-installer-download-cache", action.localFile ?: File(URL(url).path).name).absoluteFile
+        }
 
         override fun toString(): String = "Download(type=$type, os=$os, arch=$arch, url=$url, sha256=$sha256)"
     }

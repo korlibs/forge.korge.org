@@ -9,10 +9,11 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.PosixFilePermission
 import java.util.zip.GZIPInputStream
-
+import kotlin.random.*
 
 open class TarTools(
     val removeFirstDir: Boolean = false,
+    val ignoreAlreadyExists: Boolean = true,
     val processOutputName: (String) -> String? = {
         if (removeFirstDir) it.replace('\\', '/').substringAfter('/') else it
     },
@@ -20,6 +21,15 @@ open class TarTools(
     companion object : TarTools()
 
     val CHUNK_SIZE = 1 * 1024 * 1024
+
+    fun extract(inputFile: File, outputDir: File, report: (LongRange) -> Unit = {}) {
+        val name = inputFile.name
+        when {
+            name.endsWith("tar.gz", ignoreCase = true) -> extractTarGz(inputFile, outputDir, report)
+            name.endsWith("tar.zst", ignoreCase = true) -> extractTarZstd(inputFile, outputDir, report)
+            else -> error("Unknown extension for file ${inputFile.name}")
+        }
+    }
 
     fun extractTarZstd(inputFile: File, outputDir: File, report: (LongRange) -> Unit = {}) {
         inputFile.inputStream().use {
@@ -48,8 +58,9 @@ open class TarTools(
     }
 
     fun extractTar(tarInputStream: InputStream, outputDir: File) {
+        val vv = Random.nextULong()
         if (!outputDir.isDirectory) {
-            val tmpDir = File(outputDir.parentFile, "${outputDir.name}.tmp")
+            val tmpDir = File(outputDir.parentFile, "${outputDir.name}.$vv.tmp")
             for ((tarInput, entry) in tarInputStream.asTarSequence()) {
                 val fullName = processOutputName(entry.name) ?: continue
                 val outputFile = File(tmpDir, fullName)
@@ -57,7 +68,9 @@ open class TarTools(
                     entry.isDirectory -> outputFile.mkdirs()
                     else -> {
                         outputFile.parentFile?.mkdirs()
-                        Files.copy(tarInput, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        val bytes = tarInput.readBytes()
+                        outputFile.writeBytes(bytes)
+                        //Files.copy(tarInput, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
                         Files.setLastModifiedTime(outputFile.toPath(), entry.lastModifiedTime)
 
                         if (OS.CURRENT != OS.WINDOWS) {
@@ -82,7 +95,12 @@ open class TarTools(
                     }
                 }
             }
-            tmpDir.renameTo(outputDir)
+            if (outputDir.isDirectory) {
+                tmpDir.copyRecursively(outputDir, overwrite = true)
+                tmpDir.deleteRecursively()
+            } else {
+                tmpDir.renameTo(outputDir)
+            }
         }
     }
 

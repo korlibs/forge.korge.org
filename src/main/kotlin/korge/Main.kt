@@ -2,6 +2,7 @@ package korge
 
 import korge.app.*
 import korge.catalog.*
+import korge.catalog.tasks.*
 import korge.composable.*
 import korge.tasks.*
 import korge.util.*

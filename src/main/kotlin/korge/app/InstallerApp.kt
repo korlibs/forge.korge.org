@@ -3,6 +3,7 @@ package korge.app
 import androidx.compose.runtime.*
 import korge.*
 import korge.catalog.*
+import korge.catalog.tasks.*
 import korge.composable.*
 import korge.composable.Label
 import korge.tasks.*
@@ -70,10 +71,12 @@ fun InstallerApp() {
             HStack {
                 //Button("Test", enabled = action == null) { action = TestTask2 }
                 //Button(if (installed) "Reinstall" else "Install", enabled = action == null) {
-                DropDown(installers, selectedIndex = selectedIndex) { index, value ->
+                DropDown(installers, selectedIndex = selectedIndex, enabled = action == null) { index, value ->
                     selectedIndex = index
                 }
-                Button("Install", enabled = action == null && !selectedInstaller.tools.isInstalled()) {
+                //Button("Install", enabled = action == null && !selectedInstaller.tools.isInstalled()) {
+                val alreadyInstalled = selectedInstaller.tools.isInstalled()
+                Button(if (alreadyInstalled) "Reinstall" else "Install", enabled = action == null) {
                     println("Install pressed")
                     //action = InstallKorgeForge
                     action = installers[selectedIndex].task
@@ -83,24 +86,32 @@ fun InstallerApp() {
                 //}
             }
 
-            for (installation in installations) {
-                val installed = installation.tools.isInstalled()
+            if (installations.isNotEmpty() && action == null) {
                 HStack {
-                    Button("Uninstall ${installation.version}", enabled = action == null && installed) {
-                        println("Uninstall ${installation.version} pressed")
-                        action = installation.uninstallTask
-                    }
-                    Button("Open", enabled = action == null && installed) {
-                        println("Open pressed")
-                        action = installation.openTask
-                    }
-                    Button("Open Folder", enabled = action == null && installed) {
-                        println("Open Installation Folder")
-                        action = installation.openFolderTask
+                    Label("Existing Installations:", color = Color.WHITE)
+                }
+                for (installation in installations) {
+                    val installed = installation.tools.isInstalled()
+                    HStack {
+                        Button("Uninstall ${installation.version}", enabled = action == null && installed) {
+                            println("Uninstall ${installation.version} pressed")
+                            action = installation.uninstallTask
+                        }
+                        Button("Open", enabled = action == null && installed) {
+                            println("Open pressed")
+                            action = installation.openTask
+                        }
+                        Button("Open Folder", enabled = action == null && installed) {
+                            println("Open Installation Folder")
+                            action = installation.openFolderTask
+                        }
                     }
                 }
             }
-            if (DeleteDownloadCacheTask.isAvailable) {
+            if (DeleteDownloadCacheTask.isAvailable && action == null) {
+                HStack {
+                    Label("Download Cache:", color = Color.WHITE)
+                }
                 Button("Delete Download Cache", enabled = action == null) {
                     println("Delete Cache pressed")
                     action = DeleteDownloadCacheTask
