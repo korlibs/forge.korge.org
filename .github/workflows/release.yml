@@ -69,14 +69,22 @@ jobs:
             build/install-korge-forge.sh
             build/version.json
 
-      - name: Copy CMD
-        run: cp build/install-korge-forge.cmd install-korge-forge.cmd
+      - name: Copy CMD, SH, version.json
+        run: |
+          cp build/install-korge-forge.cmd docs
+          cp build/install-korge-forge.sh docs
+          cp build/version.json docs
 
-      - name: Copy SH
-        run: cp build/install-korge-forge.sh install-korge-forge.sh
-
-      - name: Copy version.json
-        run: cp build/version.json version.json
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload docs folder
+          path: 'docs'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Prepare branch
         run: |

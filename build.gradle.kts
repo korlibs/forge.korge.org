@@ -118,14 +118,14 @@ tasks {
                 .replace(Regex("INSTALLER_SHA1=(.*)"), "INSTALLER_SHA1=$JAR_SHA1")
                 .replace(Regex("KORGE_FORGE_VERSION=(.*)"), "KORGE_FORGE_VERSION=$projectVersion")
 
-            File(projectDir, "build/install-korge-forge.cmd").writeText(File(projectDir, "install-korge-forge.cmd").readText().replaceScriptStrings())
-            File(projectDir, "build/install-korge-forge.sh").writeText(File(projectDir, "install-korge-forge.sh").readText().replaceScriptStrings())
+            File(projectDir, "build/install-korge-forge.cmd").writeText(File(projectDir, "docs/install-korge-forge.cmd").readText().replaceScriptStrings())
+            File(projectDir, "build/install-korge-forge.sh").writeText(File(projectDir, "docs/install-korge-forge.sh").readText().replaceScriptStrings())
         }
     }
 
     val updateVersionJson by creating(Copy::class) {
         dependsOn(createInstallerJar)
-        from("version.json")
+        from("docs/version.json")
         into("$buildDir")
         doLast {
             val forgeVersion = Regex("forge_version: (.*)").find(File("src/main/resources/catalog.yaml").readText())!!.groupValues[1]
