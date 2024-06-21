@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history so all branches and tags are available
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -77,7 +79,11 @@ jobs:
         run: cp build/version.json version.json
 
       - name: Prepare branch
-        run: git stash push; git checkout main; git pull; git stash pop
+        run: |
+          git stash push
+          git fetch origin main
+          git checkout main
+          git stash pop
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
