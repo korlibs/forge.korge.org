@@ -1,7 +1,7 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
-SET KORGE_FORGE_VERSION=v0.1.6
+SET KORGE_FORGE_VERSION=v0.1.7
 ECHO KorGE Forge Installer %KORGE_FORGE_VERSION%
 
 CALL :NORMALIZEPATH .\korge-forge-installer
@@ -9,8 +9,8 @@ CALL :NORMALIZEPATH .\korge-forge-installer
 REM SET INSTALLER_PATH=%LOCALAPPDATA%\KorgeForgeInstaller
 SET INSTALLER_PATH=%RETVAL%
 
-SET INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v0.1.6/korge-forge-installer.jar
-SET INSTALLER_SHA1=630e573212085e7c3e4ffad6aaa04ee180cd9672
+SET INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v0.1.7/korge-forge-installer.jar
+SET INSTALLER_SHA1=271b49d02e67e21730fc9fdb4e0688e40d3cec7c
 SET INSTALLER_LOCAL_FILE=korge-forge-installer-%KORGE_FORGE_VERSION%.jar
 SET INSTALLER_LOCAL=%INSTALLER_PATH%\%INSTALLER_LOCAL_FILE%
 
