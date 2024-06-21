@@ -1,10 +1,10 @@
 forge_version: 6.1.2
 
 installers:
-  KorGE Forge 2024.1.2-patch3:
+  KorGE Forge 2024.1.2-patch4:
     version: 2024.1
     name: "KorGE Forge 2024.1-patch3"
-    actions: ["jbr_21_0_3", "2024_1", "forge_612", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
+    actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
   KorGE Forge 2024.1.2:
     version: 2024.1
     name: "KorGE Forge 2024.1"
@@ -34,8 +34,8 @@ actions:
       extract: $out/lib
     - download.macos: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-mac-product-info.241.15989.20240606.json::0bcd093ea0df95f49ead6c20cd8bfc28d17940590c2e4bf64ecb97e274b637c1"
       copy: $out/Resources/product-info.json
-  forge_612:
-    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korge-forge-plugin-6.1.2.jar::f37fff50d5e744d43aed13507c770180325ce3aaaead91ef71be5f8c3baa00a6"
+  forge_patch:
+    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korge-forge-plugin-6.1.3.jar::a80746020f22141cb922c8cc5d8ffb71aa2e52aac7080cac98102bf3044d5905"
       copy: $out/plugins/KorgePlugin/lib/korge-forge-plugin.jar.jar
   shortcuts:
     - create_shortcuts: true
