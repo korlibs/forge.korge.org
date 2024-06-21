@@ -1,6 +1,7 @@
 package korge.composable.light
 
 import androidx.compose.runtime.*
+import korge.composable.light.awt.*
 
 @Composable
 fun LButton(text: String, enabled: Boolean = true, onClick: () -> Unit = { }) {
@@ -32,7 +33,7 @@ interface LightLabel : LightComponent {
 }
 
 @Composable
-fun LContainer(relayout: (LightContainer) -> Unit = { }, content: @Composable () -> Unit) {
+fun LContainer(relayout: LightLayout = DummyLightLayout, content: @Composable () -> Unit) {
     val current = LocalLightComponents.current
     ComposeLightComponent(
         { current.create<LightContainer>() },
@@ -45,20 +46,20 @@ fun LContainer(relayout: (LightContainer) -> Unit = { }, content: @Composable ()
 
 interface LightContainer : LightComponent {
     val componentCount: Int
-    var relayout: (LightContainer) -> Unit
+    var relayout: LightLayout
     fun add(component: LightComponent, index: Int)
     fun getComponent(index: Int): LightComponent
     fun remove(index: Int)
     fun removeAll() { repeat(componentCount) { remove(componentCount - 1) } }
-    fun doRelayout() {
-        relayout(this)
-    }
     fun beginChanges() {
     }
     fun endChanges() {
     }
 }
 
+fun LightContainer.doRelayout(apply: Boolean = true): LightSize {
+    return relayout(this, apply)
+}
 
 class LightContainerList(val container: LightContainer) : AbstractList<LightComponent>() {
     override val size: Int  get() = container.componentCount

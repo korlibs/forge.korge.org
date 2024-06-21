@@ -41,7 +41,8 @@ class LightComponentApplier(val container: LightContainer) : AbstractApplier<Lig
 
     override fun up() {
         if (current is LightContainer) {
-            current.bounds = LightRect(0, 0, 1000, 400)
+            //current.bounds = current.parent?.bounds ?: LightRect(0, 0, 200, 200)
+            current.bounds = LightRect(0, 0, 300, 200)
             (current as LightContainer).doRelayout()
         }
         //println("up: $current")

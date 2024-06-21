@@ -61,10 +61,16 @@ interface LightComponents {
 
 inline fun <reified T : LightComponent> LightComponents.create(): T = create(T::class)
 
-data class LightRect(val x: Int, val y: Int, val width: Int, val height: Int)
+data class LightSize(val width: Int, val height: Int)
+data class LightRect(val x: Int, val y: Int, val width: Int, val height: Int) {
+    val size = LightSize(width, height)
+}
 
 interface LightComponent {
+    val parent: LightContainer?
     val components: LightComponents
     var enabled: Boolean
     var bounds: LightRect
+    val size: LightSize get() = bounds.size
+    var preferredSize: LightSize
 }
