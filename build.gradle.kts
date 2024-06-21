@@ -123,6 +123,26 @@ tasks {
         }
     }
 
+    val updateVersionJson by creating(Copy::class) {
+        dependsOn(createInstallerJar)
+        from("version.json")
+        into("$buildDir")
+        doLast {
+            val forgeVersion = Regex("forge_version: (.*)").find(File("src/main/resources/catalog.yaml").readText())!!.groupValues[1]
+
+            val versionJsonFile = File("build/version.json")
+            val text = versionJsonFile.readText()
+            val JAR_SHA1 = MessageDigest.getInstance("SHA1").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
+
+            val newText = text
+                .replace(Regex("\"forge.plugin.version\": \"(.*?)\"")) { "\"forge.plugin.version\": \"$forgeVersion\"" }
+                .replace(Regex("\"installer.version\": \"(.*?)\"")) { "\"installer.version\": \"$projectVersion\"" }
+                .replace(Regex("\"installer.url\": \"(.*?)\"")) { "\"installer.url\": \"https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar\"" }
+                .replace(Regex("\"installer.sha1\": \"(.*?)\"")) { "\"installer.sha1\": \"$JAR_SHA1\"" }
+            versionJsonFile.writeText(newText)
+        }
+    }
+
     val unzipTcc by creating(Copy::class) {
         from(zipTree("tcc-0.9.27-win64-bin.zip"))
         into("build/tcc")

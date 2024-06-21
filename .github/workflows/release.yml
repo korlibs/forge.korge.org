@@ -53,6 +53,9 @@ jobs:
       - name: Gradle createExe
         run: ./gradlew createExe
 
+      - name: Gradle updateVersionJson
+        run: ./gradlew updateVersionJson
+
       - name: Github Release
         uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87
         if: startsWith(github.ref, 'refs/tags/')
@@ -62,12 +65,16 @@ jobs:
             build/korge-forge-installer.exe
             build/install-korge-forge.cmd
             build/install-korge-forge.sh
+            build/version.json
 
       - name: Copy CMD
         run: cp build/install-korge-forge.cmd install-korge-forge.cmd
 
       - name: Copy SH
         run: cp build/install-korge-forge.sh install-korge-forge.sh
+
+      - name: Copy version.json
+        run: cp build/version.json version.json
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
