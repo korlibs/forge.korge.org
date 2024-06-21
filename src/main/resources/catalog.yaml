@@ -1,9 +1,9 @@
-forge_version: 6.1.2
+forge_version: 6.1.3
 
 installers:
   KorGE Forge 2024.1.2-patch4:
     version: 2024.1
-    name: "KorGE Forge 2024.1-patch3"
+    name: "KorGE Forge 2024.1-patch4"
     actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
   KorGE Forge 2024.1.2:
     version: 2024.1
