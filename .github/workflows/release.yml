@@ -76,6 +76,9 @@ jobs:
       - name: Copy version.json
         run: cp build/version.json version.json
 
+      - name: Prepare branch
+        run: git stash push; git checkout main; git pull; git stash pop
+
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
