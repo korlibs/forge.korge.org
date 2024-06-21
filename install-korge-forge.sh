@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export KORGE_FORGE_VERSION=v0.1.4
+export KORGE_FORGE_VERSION=v0.1.5
 echo KorGE Forge Installer $KORGE_FORGE_VERSION
 
 export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
@@ -8,8 +8,8 @@ export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 #export INSTALLER_PATH=$HOME/.local
 export INSTALLER_PATH=$SCRIPT_DIR/korge-forge-installer
 
-export INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$KORGE_FORGE_VERSION/korge-forge-installer.jar
-export INSTALLER_SHA1=5c311f780b761f91f35c7a675f8bcf179301f2f7
+export INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v0.1.5/korge-forge-installer.jar
+export INSTALLER_SHA1=c46bba2aa8cac94d3d2e0bdba3b9dc854561c057
 export INSTALLER_LOCAL=$INSTALLER_PATH/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
 echo Working directory... "$INSTALLER_PATH"
