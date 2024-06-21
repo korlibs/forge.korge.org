@@ -27,13 +27,16 @@ object AwtLightComponents : LightComponents {
     override fun <T : LightComponent> create(clazz: KClass<T>): T {
         val comp: AwtLightComponent<*> = when (clazz) {
             LightLabel::class -> AwtLightLabel().also { it.component = JLabel() }
-            LightContainer::class -> AwtLightContainer().also { it.component = JPanel() }
+            LightContainer::class -> AwtLightContainer().also { it.component = JPanel(); it.component.layout = null }
             LightButton::class -> AwtLightButton().also { it.component = JButton(); it.registerEvent() }
             else -> TODO("Unsupported $clazz")
         }
         return comp.also { it.components = this } as T
     }
 }
+
+fun Rectangle.toLight(): LightRect = LightRect(x, y, width, height)
+fun LightRect.toAwt(): Rectangle = Rectangle(x, y, width, height)
 
 open class AwtLightComponent<TComponent : Component>() : LightComponent {
     override lateinit var components: AwtLightComponents
@@ -42,6 +45,10 @@ open class AwtLightComponent<TComponent : Component>() : LightComponent {
     override var enabled: Boolean
         get() = component.isEnabled
         set(value) { component.isEnabled = value }
+
+    override var bounds: LightRect
+        get() = component.bounds.toLight()
+        set(value) { component.bounds = value.toAwt() }
 
     val LightComponent.comp get() = (this as AwtLightComponent<*>).component
 }
@@ -63,28 +70,74 @@ open class AwtLightLabel() : AwtLightComponent<JLabel>(), LightLabel {
     override var text: String
         get() = component.text
         set(value) { component.text = value }
+}
 
+class MyLayout : LayoutManager {
+    override fun addLayoutComponent(name: String?, comp: Component?) {
+    }
+
+    override fun removeLayoutComponent(comp: Component?) {
+    }
+
+    override fun preferredLayoutSize(parent: Container): Dimension {
+        return parent.size
+    }
+
+    override fun minimumLayoutSize(parent: Container): Dimension {
+        //TODO("Not yet implemented")
+        return parent.minimumSize
+    }
+
+    override fun layoutContainer(parent: Container) {
+        TODO("Not yet implemented")
+    }
 }
 
 class AwtLightContainer() : AwtLightComponent<Container>(), LightContainer {
-    val _components = arrayListOf<LightComponent>()
+    val comps = arrayListOf<LightComponent>()
     val container get() = this.component
 
-    override val componentCount: Int get() = _components.size
+    override var relayout: (LightContainer) -> Unit = {}
+
+    override val componentCount: Int get() = comps.size
 
     override fun add(component: LightComponent, index: Int) {
+        //println("ADD: $component, index=$index")
         container.add(component.comp, index)
-        if (index < 0) _components.add(component) else _components.add(index, component)
+        //comps.add(index, component)
+        if (index < 0) comps.add(component) else comps.add(index, component)
+        //doRelayout()
     }
 
-    override fun getComponent(index: Int): LightComponent = _components[index]
+    override fun getComponent(index: Int): LightComponent = comps[index]
 
     override fun remove(index: Int) {
+        //println("REMOVE: index=$index")
         container.remove(index)
-        _components.removeAt(index)
+        comps.removeAt(index)
+        //doRelayout()
     }
     override fun removeAll() {
+        //println("REMOVE_ALL")
         container.removeAll()
-        _components.clear()
+        comps.clear()
+        //doRelayout()
     }
+
+    override fun doRelayout() {
+        super.doRelayout()
+    }
+
+    override fun endChanges() {
+        super.endChanges()
+        component.repaint()
+    }
+
+    //fun doRelayout() {
+    //    //this.bounds = this.container.parent.bounds.toLight()
+    //    this.bounds = LightRect(0, 0, 1000, 400)
+    //    //println("doRelayout: bounds=$bounds")
+    //    relayout(this)
+    //    //component.repaint()
+    //}
 }

@@ -89,11 +89,11 @@ class AwtComponentApplier(val container: Container) : AbstractApplier<Component>
     val currentContainer get() = current as? Container
 
     override fun insertTopDown(index: Int, instance: Component) {
-        val cont = currentContainer ?: return
-        instance.name = "${id++}"
+        //val cont = currentContainer ?: return
+        //instance.name = "${id++}"
         //println("insertTopDown[$index]: $instance")
-        cont.add(instance, cont.componentCount - 1 - index)
-        cont.doUpdate()
+        //cont.add(instance, cont.componentCount - 1 - index)
+        //cont.doUpdate()
     }
 
     override fun insertBottomUp(index: Int, instance: Component) {
