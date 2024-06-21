@@ -62,3 +62,16 @@ jobs:
             build/korge-forge-installer.exe
             build/install-korge-forge.cmd
             build/install-korge-forge.sh
+
+      - name: Copy CMD
+        run: cp build/install-korge-forge.cmd install-korge-forge.cmd
+
+      - name: Copy SH
+        run: cp build/install-korge-forge.sh install-korge-forge.sh
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Release
+          author_email: release@localhost
+          message: 'Updated scripts to ${{ inputs.forced_version || github.ref }}'
