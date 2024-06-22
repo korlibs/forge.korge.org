@@ -3,7 +3,10 @@
 export KORGE_FORGE_VERSION=v0.1.7
 echo KorGE Forge Installer $KORGE_FORGE_VERSION
 
-export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+#export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
+cd $HOME/Downloads || true
+export SCRIPT_DIR=$PWD
 
 #export INSTALLER_PATH=$HOME/.local
 export INSTALLER_PATH=$SCRIPT_DIR/korge-forge-installer
