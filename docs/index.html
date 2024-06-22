@@ -116,7 +116,7 @@
                         <div class="tab-pane show active" style="padding:8px;" id="universal" role="tabpanel"
                              aria-labelledby="universal-tab">
                             <a class="btn btn-primary"
-                               href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.4/korge-forge-installer.jar">
+                               href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.7/korge-forge-installer.jar">
                                 Download JAR installer (Java required)
                             </a>
                         </div>
@@ -162,11 +162,12 @@
                                     </button>
                                 </figcaption>
                                 <pre id="cmd-script" class="language-bash" style="padding:8px;color:white;"><code
-                                        class="language-bash">curl -sLO https://forge.korge.org/install-korge-forge.cmd && install-korge-forge.cmd</code></pre>
+                                        class="language-bash">cd "%USERPROFILE%/Downloads" & curl -sLO https://forge.korge.org/install-korge-forge.cmd && install-korge-forge.cmd</code></pre>
                             </figure>
                         </div>
                         <div class="tab-pane" style="padding:8px;" id="unix" role="tabpanel"
                              aria-labelledby="linux-tab">
+                            <!--
                             <div>
                                 <a class="btn btn-primary"
                                    href="https://github.com/korlibs/forge.korge.org/releases/download/v0.1.4/korge-forge-installer.jar">
@@ -174,6 +175,7 @@
                                 </a>
                             </div>
                             <div style="margin:6px 0;">-or-</div>
+                            -->
                             <figure class="codeblock">
                                 <figcaption class="codeblock-toolbar" style="padding:4px 8px;">
                                     <span class="codeblock-lang">Mac/Linux&nbsp;SH&nbsp;Install&nbsp;Script</span>
@@ -185,7 +187,7 @@
                                     </button>
                                 </figcaption>
                                 <pre id="bash-script" class="language-bash" style="padding:8px;color:white;"><code
-                                        class="language-bash">curl -fsSLO https://forge.korge.org/install-korge-forge.sh && chmod +x install-korge-forge.sh && ./install-korge-forge.sh</code></pre>
+                                        class="language-bash">cd "$HOME/Downloads"; curl -fsSLO https://forge.korge.org/install-korge-forge.sh && chmod +x install-korge-forge.sh && ./install-korge-forge.sh</code></pre>
                             </figure>
                         </div>
                     </div>
