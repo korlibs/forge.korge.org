@@ -5,7 +5,7 @@ echo KorGE Forge Installer $KORGE_FORGE_VERSION
 
 #export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
-cd $HOME/Downloads || true
+cd "$HOME/Downloads" || true
 export SCRIPT_DIR=$PWD
 
 #export INSTALLER_PATH=$HOME/.local
