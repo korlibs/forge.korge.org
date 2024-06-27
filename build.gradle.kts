@@ -113,9 +113,11 @@ tasks {
         rename { "korge-forge-installer.jar" }
         doLast {
             val JAR_SHA1 = MessageDigest.getInstance("SHA1").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
+            val JAR_SHA256 = MessageDigest.getInstance("SHA256").digest(File(projectDir, "build/korge-forge-installer.jar").readBytes()).toHexString()
             fun String.replaceScriptStrings(): String = this
                 .replace(Regex("INSTALLER_URL=(.*)"), "INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/$projectVersion/korge-forge-installer.jar")
                 .replace(Regex("INSTALLER_SHA1=(.*)"), "INSTALLER_SHA1=$JAR_SHA1")
+                .replace(Regex("INSTALLER_SHA256=(.*)"), "INSTALLER_SHA256=$JAR_SHA256")
                 .replace(Regex("KORGE_FORGE_VERSION=(.*)"), "KORGE_FORGE_VERSION=$projectVersion")
 
             File(projectDir, "build/install-korge-forge.cmd").writeText(File(projectDir, "docs/install-korge-forge.cmd").readText().replaceScriptStrings())
