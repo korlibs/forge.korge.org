@@ -86,7 +86,7 @@ EXIT /b
     MKDIR "%OUT%" > NUL 2> NUL
     echo Extracting %INPUT_FILE%...
     REM tar --strip-components %STRIP_COMPONENTS% -C "%OUT%" -xf "%INPUT_FILE%"
-    %XZ% -d < "%INPUT_FILE%" | tar --strip-components %STRIP_COMPONENTS% -C "%OUT%" -xf -
+    "%XZ%" -d < "%INPUT_FILE%" | tar --strip-components %STRIP_COMPONENTS% -C "%OUT%" -xf -
 EXIT /b
 
 :NORMALIZE_PATH
