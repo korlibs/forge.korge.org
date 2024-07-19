@@ -18,6 +18,12 @@ SET KORGEDIR=%USERPROFILE%\.korge
 SET JAVA=%KORGEDIR%\jre-21\bin\java.exe
 MKDIR "%KORGEDIR%" 2> NUL
 
+SET XZ=%KORGEDIR%\xzdec.exe
+
+IF NOT EXIST "%XZ%" (
+    CALL :DOWNLOAD_FILE "https://github.com/korlibs/universal-jre/releases/download/0.0.1/xzdec.exe" "%XZ%" "D55CF3EE369E407AD2D9EF1098C3DDE112139593226A68E42396D1EA392C8037"
+)
+
 IF NOT EXIST "%INSTALLER_LOCAL_FILE%" (
     CALL :DOWNLOAD_FILE "%INSTALLER_URL%" "%INSTALLER_LOCAL_FILE%" "%INSTALLER_SHA256%"
 )
@@ -79,7 +85,8 @@ EXIT /b
 
     MKDIR "%OUT%" > NUL 2> NUL
     echo Extracting %INPUT_FILE%...
-    tar --strip-components %STRIP_COMPONENTS% -C "%OUT%" -xf "%INPUT_FILE%"
+    REM tar --strip-components %STRIP_COMPONENTS% -C "%OUT%" -xf "%INPUT_FILE%"
+    %XZ% -d < "%INPUT_FILE%" | tar --strip-components %STRIP_COMPONENTS% -C "%OUT%" -xf -
 EXIT /b
 
 :NORMALIZE_PATH
