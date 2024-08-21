@@ -4,7 +4,7 @@ import kotlin.test.*
 
 class PluginClasspathRebuilderTest {
     @Test
-    fun test() {
+    fun testV1() {
         val bytes = PluginClasspathRebuilderTest::class.java.getResource("/plugin-classpath.txt")!!.readBytes()
         val parsed = PluginClasspath.parse(bytes)
         val encoded = parsed.encode()
@@ -16,6 +16,9 @@ class PluginClasspathRebuilderTest {
     fun testV2() {
         val bytes = PluginClasspathRebuilderTest::class.java.getResource("/plugin-classpath.2024-02.txt")!!.readBytes()
         val parsed = PluginClasspath.parse(bytes)
+        val encoded = parsed.encode()
+        assertEquals(bytes.size, encoded.size)
+        assertContentEquals(bytes, encoded)
         //println(parsed.mainPluginDescriptorContent)
         //for (entry in parsed.entries) {
         //    println(entry)
