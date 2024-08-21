@@ -5,10 +5,10 @@ installers:
     version: 2024.2
     name: "KorGE Forge 2024.2"
     actions: ["jbr_21_0_3a", "2024_2_0_2", "shortcuts", "parallel_empty"]
-  #KorGE Forge 2024.1.2-patch4:
-  #  version: 2024.1
-  #  name: "KorGE Forge 2024.1-patch4"
-  #  actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
+  KorGE Forge 2024.1.2-patch4:
+    version: 2024.1
+    name: "KorGE Forge 2024.1-patch4"
+    actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
   #KorGE Forge 2024.1.2:
   #  version: 2024.1
   #  name: "KorGE Forge 2024.1"
@@ -37,35 +37,35 @@ actions:
     - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-extra-libs-241.15989.20240606.tar.zst::118e10e049457e28120ff6dd409f1212e9b6684962b49ab067973ddc347de127"
       filter: extra_libs
       extract: $out/lib
-  #jbr_21_0_3:
-  #  # https://github.com/JetBrains/JetBrainsRuntime/releases
-  #  - download.windows.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-windows-x64-b480.1.tar.gz::094ab7f2693bb517a9bcc44abab768233afe3c44c8c09195e3046502ede5ed7c"
-  #    download.windows.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-windows-aarch64-b480.1.tar.gz::32cf330259b283f9fd83ab5c13ec50f837cea5981b37815aa7b85478a7ee15f9"
-  #    download.linux.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-linux-x64-b480.1.tar.gz::347a5cc9defa8c019129a133f964bc1fbf8209740c902a66557b3d53d7e54807"
-  #    download.linux.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-linux-aarch64-b480.1.tar.gz::5e45dbde861e5396d7f38ccfed6ee8a7582bd27bdde0e595abbae80a4b9636eb"
-  #    download.macos.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-osx-x64-b480.1.tar.gz::4052e08def7c786cea2ff9ac15d8b9c080aa5febb178e8c6c5aa703c49fd7fb3"
-  #    download.macos.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-osx-aarch64-b480.1.tar.gz::8b9eb97947a4cd825879082d9e34df2e221a4ddf3c46a957681da1a1f7900c4a"
-  #    filter: remove_first
-  #    extract: $out/jbr
-  #2024_1:
-  #  - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-241.15989.20240606.tar.zst::ce48ee906cd06fa98b036b675f18f131b91d778171ba26ab560b0abe2b69475e"
-  #    filter: dist
-  #    extract: $out
-  #  - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-extra-libs-241.15989.20240606.tar.zst::118e10e049457e28120ff6dd409f1212e9b6684962b49ab067973ddc347de127"
-  #    filter: extra_libs
-  #    extract: $out/lib
-  #  - download.macos: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-mac-product-info.241.15989.20240606.json::0bcd093ea0df95f49ead6c20cd8bfc28d17940590c2e4bf64ecb97e274b637c1"
-  #    copy: $out/Resources/product-info.json
-  #forge_patch:
-  #  - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korge-forge-plugin-6.1.3.jar::a80746020f22141cb922c8cc5d8ffb71aa2e52aac7080cac98102bf3044d5905"
-  #    copy: $out/plugins/KorgePlugin/lib/korge-forge-plugin.jar.jar
+  jbr_21_0_3:
+    # https://github.com/JetBrains/JetBrainsRuntime/releases
+    - download.windows.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-windows-x64-b480.1.tar.gz::094ab7f2693bb517a9bcc44abab768233afe3c44c8c09195e3046502ede5ed7c"
+      download.windows.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-windows-aarch64-b480.1.tar.gz::32cf330259b283f9fd83ab5c13ec50f837cea5981b37815aa7b85478a7ee15f9"
+      download.linux.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-linux-x64-b480.1.tar.gz::347a5cc9defa8c019129a133f964bc1fbf8209740c902a66557b3d53d7e54807"
+      download.linux.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-linux-aarch64-b480.1.tar.gz::5e45dbde861e5396d7f38ccfed6ee8a7582bd27bdde0e595abbae80a4b9636eb"
+      download.macos.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-osx-x64-b480.1.tar.gz::4052e08def7c786cea2ff9ac15d8b9c080aa5febb178e8c6c5aa703c49fd7fb3"
+      download.macos.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-osx-aarch64-b480.1.tar.gz::8b9eb97947a4cd825879082d9e34df2e221a4ddf3c46a957681da1a1f7900c4a"
+      filter: remove_first
+      extract: $out/jbr
+  2024_1:
+    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-241.15989.20240606.tar.zst::ce48ee906cd06fa98b036b675f18f131b91d778171ba26ab560b0abe2b69475e"
+      filter: dist
+      extract: $out
+    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-extra-libs-241.15989.20240606.tar.zst::118e10e049457e28120ff6dd409f1212e9b6684962b49ab067973ddc347de127"
+      filter: extra_libs
+      extract: $out/lib
+    - download.macos: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-mac-product-info.241.15989.20240606.json::0bcd093ea0df95f49ead6c20cd8bfc28d17940590c2e4bf64ecb97e274b637c1"
+      copy: $out/Resources/product-info.json
+  forge_patch:
+    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korge-forge-plugin-6.1.3.jar::a80746020f22141cb922c8cc5d8ffb71aa2e52aac7080cac98102bf3044d5905"
+      copy: $out/plugins/KorgePlugin/lib/korge-forge-plugin.jar.jar
   shortcuts:
     - create_shortcuts: true
   parallel_empty:
-  #m2.korlibs:
-  #  - download: "https://github.com/korlibs/korlibs/releases/download/v6.0.0-alpha5/korlibs-6.0.0-alpha5.tar.zstd::f8383e3400e87231d2a4d263f6cd6c5add569165f39eb7a7f7d45658f43d3b3b"
-  #    #local_file: "artifacts-korlibs-6.0.0-alpha5.tar.zstd"
-  #    extract: $home/.m2/repository
-  #m2.korge:
-  #  - download: "https://github.com/korlibs/korge/releases/download/v6.0.0-alpha5/korge-6.0.0-alpha5.tar.zstd::ffacbccbf25871083bb8d82d931db14521e5edf91e370d9ab542bf4d0e13f746"
-  #    extract: $home/.m2/repository
+  m2.korlibs:
+    - download: "https://github.com/korlibs/korlibs/releases/download/v6.0.0-alpha5/korlibs-6.0.0-alpha5.tar.zstd::f8383e3400e87231d2a4d263f6cd6c5add569165f39eb7a7f7d45658f43d3b3b"
+      #local_file: "artifacts-korlibs-6.0.0-alpha5.tar.zstd"
+      extract: $home/.m2/repository
+  m2.korge:
+    - download: "https://github.com/korlibs/korge/releases/download/v6.0.0-alpha5/korge-6.0.0-alpha5.tar.zstd::ffacbccbf25871083bb8d82d931db14521e5edf91e370d9ab542bf4d0e13f746"
+      extract: $home/.m2/repository
