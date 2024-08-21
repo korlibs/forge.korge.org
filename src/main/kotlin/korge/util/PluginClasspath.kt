@@ -9,14 +9,15 @@ class PluginClasspath(val version: Int, val isJarOnly: Int, val mainPluginDescri
     }
 
     fun encode(): ByteArray {
-        return encodeV1()
-    }
-
-    fun encodeV1(): ByteArray {
         val bytes = ByteArray(8 * 1024 * 1024)
         val buffer = ByteBuffer.wrap(bytes)
         buffer.put(version.toByte())
         buffer.put(isJarOnly.toByte())
+        if (version == 2) {
+            val mainPluginDescriptorContentBytes = (mainPluginDescriptorContent ?: "").encodeToByteArray()
+            buffer.putInt(mainPluginDescriptorContentBytes.size)
+            buffer.put(mainPluginDescriptorContentBytes)
+        }
         buffer.putShort(entries.size.toShort())
         for (entry in entries) {
             //println("- ENTRY: ${entry.name}, pos=${buffer.position()} : XML=${entry.pluginXml.length}")
@@ -27,7 +28,7 @@ class PluginClasspath(val version: Int, val isJarOnly: Int, val mainPluginDescri
                 buffer.putStringWithLen(jar, long = false)
             }
         }
-        println(buffer.position())
+        //println(buffer.position())
         return bytes.copyOf(buffer.position())
     }
 
