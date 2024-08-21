@@ -58,7 +58,7 @@ class CatalogModel(val info: Dyn) {
         override fun toString(): String = "$ldownloads"
     }
 
-    inner class Download(val type: String, val url: String, val sha256: String?) {
+    inner class Download(val type: String, val url: String, val shasum: String?) {
         val typeParts = type.split(".").filter { it != "download" }
         var os: OS? = typeParts.firstNotNullOfOrNull { OS[it] }
         var arch: ARCH? = typeParts.firstNotNullOfOrNull { ARCH[it] }
@@ -71,7 +71,7 @@ class CatalogModel(val info: Dyn) {
             return File("korge-forge-installer-download-cache", action.localFile ?: File(URL(url).path).name).absoluteFile
         }
 
-        override fun toString(): String = "Download(type=$type, os=$os, arch=$arch, url=$url, sha256=$sha256)"
+        override fun toString(): String = "Download(type=$type, os=$os, arch=$arch, url=$url, sha256/512=$shasum)"
     }
 
     fun parseAction(it: Dyn, index: Int, groupName: String): SimpleAction {

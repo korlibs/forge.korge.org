@@ -62,9 +62,10 @@ enum class ARCH {
 suspend fun downloadFile(
     url: String,
     outFile: File,
-    sha256: String? = null,
+    shasum: String? = null,
     progress: (remaining: LongRange) -> Unit = { range -> }
 ) {
+    val shaSize = if (shasum != null && shasum.length == 128) 512 else 256
     val outFile = outFile.absoluteFile
     withContext(Dispatchers.IO) {
         if (!outFile.exists()) {
@@ -74,15 +75,15 @@ suspend fun downloadFile(
             val totalLength = connection.contentLengthLong
             val digest = connection.getInputStream().use { inp ->
                 tmpFile.outputStream().use { out ->
-                    inp.copyTo(out) {
+                    inp.copyTo(out, digest = MessageDigest.getInstance("SHA-$shaSize")) {
                         progress(it..totalLength)
                     }
                 }
             }
-            if (sha256 != null) {
-                val downloadedSha256 = digest.toHexString().lowercase()
-                val expectedSha256 = sha256.lowercase()
-                check(downloadedSha256 == expectedSha256) { "Digest for\n  url=$url\n  expected=${expectedSha256}\n  given=${downloadedSha256}\n  tmp=$tmpFile"}
+            if (shasum != null) {
+                val downloadedShasum = digest.toHexString().lowercase()
+                val expectedShasum = shasum.lowercase()
+                check(downloadedShasum == expectedShasum) { "Digest for\n  url=$url\n  expected=${expectedShasum}\n  given=${downloadedShasum}\n  tmp=$tmpFile"}
             }
             tmpFile.renameTo(outFile)
             println("DOWNLOADED $outFile from $url")
@@ -90,11 +91,10 @@ suspend fun downloadFile(
     }
 }
 
-public fun InputStream.copyTo(out: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE, progress: (Long) -> Unit = { }): ByteArray {
+public fun InputStream.copyTo(out: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE, digest: MessageDigest = MessageDigest.getInstance("SHA-256"), progress: (Long) -> Unit = { }): ByteArray {
     var bytesCopied: Long = 0
     val buffer = ByteArray(bufferSize)
     var bytes = read(buffer)
-    val digest = MessageDigest.getInstance("SHA-256")
     digest.reset()
     progress(0L)
     while (bytes >= 0) {

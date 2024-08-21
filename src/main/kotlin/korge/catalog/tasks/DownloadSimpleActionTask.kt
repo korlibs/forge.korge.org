@@ -12,7 +12,7 @@ class DownloadSimpleActionTask(val action: CatalogModel.SimpleAction, name: Stri
                     download.url,
                     download.realLocalFile(action),
                     progress = context::report,
-                    sha256 = download.sha256
+                    shasum = download.shasum
                 )
             }
         }
