@@ -4,7 +4,7 @@ SETLOCAL enabledelayedexpansion
 
 SET KORGE_FORGE_VERSION=v2024.2.0.2
 SET INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v2024.2.0.2/korge-forge-installer.jar
-SET INSTALLER_SHA256=d2f6756229dd04cf758cebdc7d56abd9b3d391d0f33295fd4edc36af8d374ddc
+SET INSTALLER_SHA256=ebb2bb9f0245b1ad1fbac6c5339d109d2db86e7c905bcd2190df810b2c8b848e
 
 ECHO KorGE Forge Installer %KORGE_FORGE_VERSION%
 
