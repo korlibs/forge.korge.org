@@ -2,13 +2,21 @@ package korge.util
 
 import java.nio.*
 
-class PluginClasspath(val version: Int, val entries: List<Plugin>) {
-    class Plugin(var name: String, var pluginXml: String, var jars: List<String>)
+// classpath.kt
+class PluginClasspath(val version: Int, val isJarOnly: Int, val mainPluginDescriptorContent: String?, val entries: List<Plugin>) {
+    class Plugin(var name: String, var pluginXml: String, var jars: List<String>) {
+        override fun toString(): String = "Plugin(name=$name, pluginXml=${pluginXml.length}, jars=${jars.size})"
+    }
 
     fun encode(): ByteArray {
+        return encodeV1()
+    }
+
+    fun encodeV1(): ByteArray {
         val bytes = ByteArray(8 * 1024 * 1024)
         val buffer = ByteBuffer.wrap(bytes)
-        buffer.putShort(version.toShort())
+        buffer.put(version.toByte())
+        buffer.put(isJarOnly.toByte())
         buffer.putShort(entries.size.toShort())
         for (entry in entries) {
             //println("- ENTRY: ${entry.name}, pos=${buffer.position()} : XML=${entry.pluginXml.length}")
@@ -26,8 +34,18 @@ class PluginClasspath(val version: Int, val entries: List<Plugin>) {
     companion object {
         fun parse(bytes: ByteArray): PluginClasspath {
             val buffer = ByteBuffer.wrap(bytes)
-            val version = buffer.getShort().toInt()
+            val version = buffer.get().toInt()
+            val isJarOnly = buffer.get().toInt()
+            check(version == 1 || version == 2)
+            check(isJarOnly == 1)
+            val mainPluginDescriptorContent = if (version == 2) {
+                val mainPluginDescriptorContentSize = buffer.getInt()
+                ByteArray(mainPluginDescriptorContentSize).also { buffer.get(it) }.decodeToString()
+            } else {
+                null
+            }
             val count = buffer.getShort().toInt()
+            //println(count)
             val plugins = (0 until count).map {
                 val jarCount = buffer.getShort()
                 //println("--------------")
@@ -37,7 +55,7 @@ class PluginClasspath(val version: Int, val entries: List<Plugin>) {
                 val jars = (0 until jarCount).map { buffer.getStringWithLen(long = false) }
                 Plugin(name, pluginXml, jars)
             }
-            return PluginClasspath(version, plugins)
+            return PluginClasspath(version, isJarOnly, mainPluginDescriptorContent, plugins)
         }
 
         fun ByteBuffer.getStringWithLen(long: Boolean): String {
