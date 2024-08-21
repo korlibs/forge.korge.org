@@ -1,7 +1,7 @@
 {
   "ide.version": "2024.1",
-  "forge.plugin.version": "6.1.2",
-  "installer.version": "v0.1.7",
-  "installer.url": "https://github.com/korlibs/korge-forge-installer/releases/download/v0.1.7/korge-forge-installer.jar",
-  "installer.sha1": "271b49d02e67e21730fc9fdb4e0688e40d3cec7c"
+  "forge.plugin.version": "2024.2.0.2",
+  "installer.version": "v2024.2.0.2",
+  "installer.url": "https://github.com/korlibs/korge-forge-installer/releases/download/v2024.2.0.2/korge-forge-installer.jar",
+  "installer.sha1": "d79bd4d8ea682f3865f8d9c94f71d3599b49cc5e"
 }
