@@ -29,14 +29,11 @@ actions:
       filter: remove_first
       extract: $out/jbr
   2024_2_0_2:
-    - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2024.2.0.2/forge-2024.2.0.2-dist.fix.tar.zst::7f17ded2a9117809767e89effa8b0e70b3e15978b37a10100fa5b85bd87edb7030be989067582ebd5a77479f1f4c0876ec1da319f20d257c0f55eb0a8712f9b3"
+    - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2024.2.0.2/forge-2024.2.0.2-dist.tar.zst::766cee7d6b90aa90f94988b022e6d2765f3babe741758efdf2904f73899437e2945b9e2a10049a9787ee804301ae9faa1c5d1e7f0bf640b15ff2f2dbd067f261"
       filter: dist
       extract: $out
     - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2024.2.0.2/korge-forge-plugin-2024.2.0.2-patch-1.jar::fed5de0685b55955e83ac01048c87c5a650fa8ff3d59becf27ed41c2627bc18d00557e63bc62436cb4da97e203c556ce3ef47bb60eb7120b25655f41f34a6e56"
       copy: $out/plugins/KorgePlugin/lib/korge-forge-plugin.jar.jar
-    - download: "https://github.com/korlibs/forge.korge.org/releases/download/2024.1.1-alpha/korgeforge-extra-libs-241.15989.20240606.tar.zst::118e10e049457e28120ff6dd409f1212e9b6684962b49ab067973ddc347de127"
-      filter: extra_libs
-      extract: $out/lib
   jbr_21_0_3:
     # https://github.com/JetBrains/JetBrainsRuntime/releases
     - download.windows.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-windows-x64-b480.1.tar.gz::094ab7f2693bb517a9bcc44abab768233afe3c44c8c09195e3046502ede5ed7c"
