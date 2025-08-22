@@ -11,7 +11,7 @@ export SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 #export INSTALLER_PATH=$HOME/.local
 export INSTALLER_PATH=$SCRIPT_DIR/korge-forge-installer
 
-export INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v2024.2.0.2-patch1/korge-forge-installer.jar
+export INSTALLER_URL=https://github.com/korlibs/forge.korge.org/releases/download/v2024.2.0.2-patch1/korge-forge-installer.jar
 export INSTALLER_SHA1=503022bb1b662b6d29853e087d85e71a034e1017
 export INSTALLER_LOCAL=$INSTALLER_PATH/korge-forge-installer-$KORGE_FORGE_VERSION.jar
 
