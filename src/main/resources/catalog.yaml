@@ -43,7 +43,7 @@ actions:
       filter: remove_first
       extract: $out/jbr
   2025_2_1:
-    - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2025.2.1/forge-2025.2.1-dist.tar.zst::e6c38456be79ca460c0e8bbd6f2afeaface35e13d943a29b5bfc85057a03407842b4700bbb57417a7842958548126fc2ea8a85ab3028e7ba7a3cfddf4d6d609e"
+    - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2025.2.1/forge-2025.2.1-dist.tar.zst::57af0e2899ae35e7a282cc4ca5414dbf72d728baeded702158364aff9e3ee5ef44ece77afcf7e4a2a07b06d9b912f323d42f581b47831722e0b295a00e182712"
       filter: dist
       extract: $out
     - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2025.2.1/korge-forge-plugin-2025.2.1.jar::fea3e13901caedcfe5fd0e3b6842489d5c4574d9cfbf73fde8fb20d87b79f8aeb2cdc277df16651258c8d0b220f03a9d84fc3ea7f216ee7d4fbdbe14cf217cd9"
