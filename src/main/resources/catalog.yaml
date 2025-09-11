@@ -4,7 +4,7 @@ installers:
   KorGE Forge 2025.2.1:
     version: 2025.2
     name: "KorGE Forge 2025.2"
-    actions: ["jbr_21_0_3a", "2025_2_1", "shortcuts", "parallel_empty"]
+    actions: ["jbr_21_0_8", "2025_2_1", "shortcuts", "parallel_empty"]
   KorGE Forge 2024.2.0.2:
     version: 2024.2
     name: "KorGE Forge 2024.2"
