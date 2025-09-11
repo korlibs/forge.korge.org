@@ -3,5 +3,5 @@
   "forge.plugin.version": "2024.2.0.2",
   "installer.version": "v2025.2.1",
   "installer.url": "https://github.com/korlibs/korge-forge-installer/releases/download/v2025.2.1/korge-forge-installer.jar",
-  "installer.sha1": "8793b554abb12b538d8f0a5b84472f113dfa6375"
+  "installer.sha1": "a65f7f10243bf89c0c9f3e2fea92fd9b27d68318"
 }
