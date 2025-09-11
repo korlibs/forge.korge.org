@@ -9,10 +9,10 @@ installers:
     version: 2024.2
     name: "KorGE Forge 2024.2"
     actions: ["jbr_21_0_3a", "2024_2_0_2", "shortcuts", "parallel_empty"]
-  KorGE Forge 2024.1.2-patch4:
-    version: 2024.1
-    name: "KorGE Forge 2024.1-patch4"
-    actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
+  #KorGE Forge 2024.1.2-patch4:
+  #  version: 2024.1
+  #  name: "KorGE Forge 2024.1-patch4"
+  #  actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
   #KorGE Forge 2024.1.2:
   #  version: 2024.1
   #  name: "KorGE Forge 2024.1"
@@ -57,12 +57,12 @@ actions:
 
   jbr_21_0_8:
     # https://github.com/JetBrains/JetBrainsRuntime/releases
-    - download.windows.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-windows-x64-b1038.71.tar.gz::094ab7f2693bb517a9bcc44abab768233afe3c44c8c09195e3046502ede5ed7c"
-      download.windows.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-windows-aarch64-b1038.71.tar.gz::32cf330259b283f9fd83ab5c13ec50f837cea5981b37815aa7b85478a7ee15f9"
-      download.linux.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-linux-x64-b1038.71.tar.gz::347a5cc9defa8c019129a133f964bc1fbf8209740c902a66557b3d53d7e54807"
-      download.linux.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-linux-aarch64-b1038.71.tar.gz::5e45dbde861e5396d7f38ccfed6ee8a7582bd27bdde0e595abbae80a4b9636eb"
-      download.macos.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-osx-x64-b1038.71.tar.gz::4052e08def7c786cea2ff9ac15d8b9c080aa5febb178e8c6c5aa703c49fd7fb3"
-      download.macos.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-osx-aarch64-b1038.71.tar.gz::8b9eb97947a4cd825879082d9e34df2e221a4ddf3c46a957681da1a1f7900c4a"
+    - download.windows.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-windows-x64-b1038.71.tar.gz::1788429d45c23f2351e9f681341b8894eb2855ddbf47cd09fd4c75ee66cde5ae"
+      download.windows.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-windows-aarch64-b1038.71.tar.gz::bebe169fbb87ff230effc81e5d3d33c4eab462cd8f1bda3bacabba7d22fad381"
+      download.linux.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-linux-x64-b1038.71.tar.gz::426e5bc38048878e7fd4998d4e6bb44036b7a516263526328e8a3d91e6d95407"
+      download.linux.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-linux-aarch64-b1038.71.tar.gz::0b5eb9085773883a15620dcfda705d6c11ec82f3708dfbc919d9ae32326bcf9d"
+      download.macos.x64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-osx-x64-b1038.71.tar.gz::40007af2620ffad8c2c30f1f03d595a157664d844c48c4a3cbb09e4560c4efde"
+      download.macos.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.8-osx-aarch64-b1038.71.tar.gz::7e3d2785cab765173197e5de96a9de8a7f64d50b21cad3b3043971a6d7411947"
       filter: remove_first
       extract: $out/jbr
   2024_1:
