@@ -1,6 +1,10 @@
 forge_version: 2024.2.0.2
 
 installers:
+  KorGE Forge 2025.2.1:
+    version: 2025.2
+    name: "KorGE Forge 2025.2"
+    actions: ["jbr_21_0_3a", "2025_2_1", "shortcuts", "parallel_empty"]
   KorGE Forge 2024.2.0.2:
     version: 2024.2
     name: "KorGE Forge 2024.2"
@@ -28,6 +32,12 @@ actions:
       download.macos.arm64: "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-21.0.3-osx-aarch64-b509.11.tar.gz::87ff6eb329d5f822acf81c6cd3ae235be59f16b75e50bf731e6cab92e8912cc95bc85de2b4403753368046b69f764cddff897450a20cce1865feafafc6460faf"
       filter: remove_first
       extract: $out/jbr
+  2025_2_1:
+    - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2025.2.1/forge-2025.2.1-dist.tar.zst::e6c38456be79ca460c0e8bbd6f2afeaface35e13d943a29b5bfc85057a03407842b4700bbb57417a7842958548126fc2ea8a85ab3028e7ba7a3cfddf4d6d609e"
+      filter: dist
+      extract: $out
+    - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2025.2.1/korge-forge-plugin-2025.2.1.jar::fea3e13901caedcfe5fd0e3b6842489d5c4574d9cfbf73fde8fb20d87b79f8aeb2cdc277df16651258c8d0b220f03a9d84fc3ea7f216ee7d4fbdbe14cf217cd9"
+      copy: $out/plugins/KorgePlugin/lib/korge-forge-plugin.jar.jar
   2024_2_0_2:
     - download: "https://github.com/korlibs/intellij-community/releases/download/forge-2024.2.0.2/forge-2024.2.0.2-dist.tar.zst::766cee7d6b90aa90f94988b022e6d2765f3babe741758efdf2904f73899437e2945b9e2a10049a9787ee804301ae9faa1c5d1e7f0bf640b15ff2f2dbd067f261"
       filter: dist
