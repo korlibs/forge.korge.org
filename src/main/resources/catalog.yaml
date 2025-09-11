@@ -1,4 +1,4 @@
-forge_version: 2024.2.0.2
+forge_version: 2025.2.1
 
 installers:
   KorGE Forge 2025.2.1:
@@ -9,18 +9,18 @@ installers:
     version: 2024.2
     name: "KorGE Forge 2024.2"
     actions: ["jbr_21_0_3a", "2024_2_0_2", "shortcuts", "parallel_empty"]
-  #KorGE Forge 2024.1.2-patch4:
-  #  version: 2024.1
-  #  name: "KorGE Forge 2024.1-patch4"
-  #  actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
-  #KorGE Forge 2024.1.2:
-  #  version: 2024.1
-  #  name: "KorGE Forge 2024.1"
-  #  actions: ["jbr_21_0_3", "2024_1", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
-  #KorGE Forge 2024.1:
-  #  version: 2024.1
-  #  name: "KorGE Forge 2024.1"
-  #  actions: ["jbr_21_0_3", "2024_1", "m2.korlibs", "m2.korge", "shortcuts"]
+  KorGE Forge 2024.1.2-patch4:
+    version: 2024.1
+    name: "KorGE Forge 2024.1-patch4"
+    actions: ["jbr_21_0_3", "2024_1", "forge_patch", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
+  KorGE Forge 2024.1.2:
+    version: 2024.1
+    name: "KorGE Forge 2024.1"
+    actions: ["jbr_21_0_3", "2024_1", "shortcuts", "parallel_empty", "m2.korlibs", "m2.korge"]
+  KorGE Forge 2024.1:
+    version: 2024.1
+    name: "KorGE Forge 2024.1"
+    actions: ["jbr_21_0_3", "2024_1", "m2.korlibs", "m2.korge", "shortcuts"]
 
 actions:
   jbr_21_0_3a:
