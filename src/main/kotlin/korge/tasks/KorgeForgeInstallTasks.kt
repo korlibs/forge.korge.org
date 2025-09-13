@@ -148,7 +148,7 @@ open class BaseKorgeForgeInstallTools(val version: String) {
 
     val exe = when (OS.CURRENT) {
         OS.OSX -> File(VersionFolder, "MacOS/korge")
-        OS.LINUX -> File(VersionFolder, "bin/korge.sh")
+        OS.LINUX -> File(VersionFolder, "bin/korge")
         else -> File(VersionFolder, "bin/korge64.exe")
     }
     val ico = File(VersionFolder, "bin/korge.ico")
