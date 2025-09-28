@@ -2,9 +2,9 @@
 
 SETLOCAL enabledelayedexpansion
 
-SET KORGE_FORGE_VERSION=v2025.2.1-HOTFIX
-SET INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v2025.2.1-HOTFIX/korge-forge-installer.jar
-SET INSTALLER_SHA256=ed69f35cddc0b49ab60dca055384727af33dcc9098c7a9fc530351f3df5f7217
+SET KORGE_FORGE_VERSION=v2025.2.1-patch4
+SET INSTALLER_URL=https://github.com/korlibs/korge-forge-installer/releases/download/v2025.2.1-patch4/korge-forge-installer.jar
+SET INSTALLER_SHA256=5894575977aee750db1cd2e68c798a8e87e8f7ec478d54731622fd880c2a5e79
 
 ECHO KorGE Forge Installer %KORGE_FORGE_VERSION%
 
